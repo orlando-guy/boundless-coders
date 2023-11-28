@@ -12,7 +12,7 @@ import {
     SideNavItems,
     HeaderSideNavItems,
 } from '@carbon/react'
-import { Switcher, Notification, UserAvatar } from '@carbon/icons-react'
+import { UserAvatar, LogoGithub } from '@carbon/icons-react'
 import Link from 'next/link'
 
 
@@ -34,7 +34,10 @@ const HeaderNavbar = () => {
                     </Link>
                     <HeaderNavigation aria-label='Carbon header'>
                         <Link href="/repos" passHref legacyBehavior>
-                            <HeaderMenuItem href="/repos">Repositories</HeaderMenuItem>
+                            <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
+                        </Link>
+                        <Link href="/" passHref legacyBehavior>
+                            <HeaderMenuItem href="/">Les défis de codage</HeaderMenuItem>
                         </Link>
                     </HeaderNavigation>
                     <SideNav
@@ -45,20 +48,22 @@ const HeaderNavbar = () => {
                         <SideNavItems>
                             <HeaderSideNavItems>
                                 <Link href="/repos" passHref legacyBehavior>
-                                    <HeaderMenuItem href="/repos">Repositories</HeaderMenuItem>
+                                    <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
+                                </Link>
+                                <Link href="/" passHref legacyBehavior>
+                                    <HeaderMenuItem href="/">Les défis de codage</HeaderMenuItem>
                                 </Link>
                             </HeaderSideNavItems>
                         </SideNavItems>
                     </SideNav>
                     <HeaderGlobalBar>
-                        <HeaderGlobalAction aria-label="Notification" tooltipAlignment="center">
-                            <Notification size={20} />
+                        <HeaderGlobalAction aria-label="Voir le projet" tooltipAlignment="center">
+                            <a href="https://github.com/orlando-guy/boundless-coders" target='_blank'>
+                                <LogoGithub size={20} />
+                            </a>
                         </HeaderGlobalAction>
-                        <HeaderGlobalAction aria-label="User Avatar" tooltipAlignment="center">
+                        <HeaderGlobalAction aria-label="Avatar de l'utilisateur" tooltipAlignment="center">
                             <UserAvatar size={20} />
-                        </HeaderGlobalAction>
-                        <HeaderGlobalAction aria-label="App Switcher" tooltipAlignment="end">
-                            <Switcher size={20} />
                         </HeaderGlobalAction>
                     </HeaderGlobalBar>
                 </Header>

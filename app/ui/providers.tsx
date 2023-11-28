@@ -1,7 +1,8 @@
 'use client'
 
 import HeaderNavbar from "@/app/ui/header"
-import { Content, Theme } from '@carbon/react'
+import { Theme } from '@carbon/react'
+import Footer from "@/app/ui/footer/footer"
 
 export function Providers({
     children
@@ -11,7 +12,12 @@ export function Providers({
             <Theme theme="g100">
                 <HeaderNavbar />
             </Theme>
-            <Content>{children}</Content>
+            <main className="container">
+                {children}
+            </main>
+            <Theme theme="g100">
+                <Footer />
+            </Theme>
         </>
     )
 }

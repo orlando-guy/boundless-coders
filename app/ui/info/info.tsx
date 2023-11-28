@@ -1,5 +1,4 @@
 import { Grid, Column } from '@carbon/react';
-import { createArrayFromPhrase } from '@/app/lib/utils';
 import React from 'react';
 
 interface InfoSectionProps {
