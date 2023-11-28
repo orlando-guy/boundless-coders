@@ -4,33 +4,53 @@
 @use '@carbon/react/scss/theme' as *;
 @use './mixins' as *;
 
-.landing-page__r2 .cds--tabs--scrollable {
-    transform: translateZ(0);
-    justify-content: flex-end;
-}
-
-.landing-page__r2 .cds--tab-content {
-    padding: 0;
-}
-
 .landing-page__banner {
     padding-top: $spacing-05;
-    padding-bottom: $spacing-07 * 4;
-    padding-left: $spacing-06;
+    padding-bottom: $spacing-07 * 3;
     @include landing-page-background;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .landing-page__heading {
-    @include type-style('productive-heading-05');
+    // max-width: 980px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-center;
+    gap: 0.5rem;
+
+    h1 {
+        @include type-style('productive-heading-05');
+    }
+
+    p {
+        max-width: 700px;
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        color: rgb(51 65 85 / 1);
+
+        @include breakpoint-down(sm) {
+            font-size: 1.25rem;
+        }
+    }
 }
 
-// .landing-page__r2 {
-//     margin-left: -20px;
-//     margin-right: -20px
-// }
+.landing-page__banner-actions {
+    display: flex;
+    flex-direction: row;
+    gap: .75rem;
+
+    @include breakpoint-down(md) {
+        flex-direction: column;
+    }
+}
 
 .tabs-group-content {
     padding: $spacing-10 $spacing-06;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .landing-page__subheading {
@@ -40,22 +60,37 @@
 }
 
 .landing-page__p {
-    @include type-style('productive-heading-03');
     margin-top: $spacing-06;
     margin-bottom: $spacing-08;
 
     @include breakpoint-between((320px + 1), md) {
-        max-width: 75%;
+        max-width: 100%;
     }
+}
+
+.landing-page__r2 .cds--tabs--scrollable {
+    transform: translateZ(0);
+    justify-content: flex-end;
+}
+
+.landing-page__r2 .cds--tab-content {
+    padding: 0;
 }
 
 .tabs-group {
     background-color: $layer-01;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+
+    @include breakpoint-down(md) {
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 .tabs-group__image {
+    object-fit: contain;
     @include breakpoint-down(lg) {
-        object-fit: contain;
         height: auto;
     }
 }
@@ -63,7 +98,6 @@
 .landing-page__r3 {
     padding-top: $spacing-09;
     padding-bottom: $spacing-09;
-    padding-left: $spacing-06;
     @include landing-page-background;
 }
 

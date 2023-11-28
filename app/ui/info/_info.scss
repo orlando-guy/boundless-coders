@@ -6,6 +6,10 @@
 
 .info-section__heading {
   @include type-style('heading-01');
+
+  @include breakpoint-down(md) {
+    text-wrap: nowrap;
+  }
 }
 
 .info-card {
