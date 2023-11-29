@@ -12,20 +12,26 @@ import {
     TableCell,
     TableExpandedRow
 } from '@carbon/react';
-import { TableHeaders, TableRows, listUserReposResponse } from '../lib/definitions';
+import { TableHeaders, listUserReposResponse } from '../lib/definitions';
 
 const RepositoryTable = (
     { rows, headers }
         : Readonly<{ rows: listUserReposResponse['data'] | [], headers: TableHeaders[] }>
 ) => {
-    // if ( !rows ||  rows === undefined) return (<></>)
-    const getRowDescription = (rowId: number) =>  {
+    const getRowDescription = (rowId: number) => {
         const row = rows.find(({ id }) => id === rowId)
         return row ? row.description : ''
     }
+    const newRows = rows.map(r => {
+        let row = {
+            ...r,
+            id: r['id'].toString(),
+        }
+        return row
+    })
     return (
         <DataTable
-            rows={rows}
+            rows={newRows}
             headers={headers}
             render={({
                 rows,
@@ -41,27 +47,35 @@ const RepositoryTable = (
                     <Table {...getTableProps()}>
                         <TableHead>
                             <TableRow>
-                                <TableExpandHeader />
+                                <TableExpandHeader id="carbon-expander" />
                                 {headers.map((header) => (
-                                    <TableHeader key={header.key} {...getHeaderProps({ header })}>
+                                    <TableHeader {...getHeaderProps({ header })} key={header.key }>
                                         {header.header}
                                     </TableHeader>
                                 ))}
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
-                                <React.Fragment key={row.id}>
-                                    <TableExpandRow {...getRowProps({ row })}>
+                            {rows.map((row) => {
+                                let expandedValue = getRowDescription(Number(row.id))
+                                return (
+                                    <React.Fragment key={row.id}>
+                                    <TableExpandRow
+                                        aria-controls='name'
+                                        isExpanded={false}
+                                        {...getRowProps({ row })}
+                                        onExpand={(e: React.MouseEvent) => console.log(e)}
+                                    >
                                         {row.cells.map((cell) => (
                                             <TableCell key={cell.id}>{cell.value}</TableCell>
                                         ))}
                                     </TableExpandRow>
                                     <TableExpandedRow colSpan={headers.length + 1}>
-                                        <p>{getRowDescription(Number(row.id))}</p>
+                                        <p>{expandedValue}</p>
                                     </TableExpandedRow>
                                 </React.Fragment>
-                            ))}
+                                )
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>
