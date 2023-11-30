@@ -3,8 +3,6 @@
 import {
     Grid,
     Column,
-    Breadcrumb,
-    BreadcrumbItem,
     Tabs,
     Tab,
     TabList,

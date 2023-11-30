@@ -15,7 +15,7 @@ export function Providers({
             <main className="container">
                 {children}
             </main>
-            <Theme theme="g100">
+            <Theme theme="g100" className="mt-auto">
                 <Footer />
             </Theme>
         </>

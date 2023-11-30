@@ -15,6 +15,12 @@ footer {
     overflow-x: hidden !important;
 }
 
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 @media (min-width: 42rem) {
     .cds--grid--no-gutter {
         padding-left: 1rem;
@@ -126,6 +132,14 @@ footer {
 
 .pt-3 {
     padding-top: .75rem;
+}
+
+.mt-auto {
+    margin-top: auto;
+}
+
+.mt-0 {
+    margin-top: 0;
 }
 
 .m-1 {
