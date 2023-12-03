@@ -28,61 +28,83 @@ model User {
 }
 
 model Tag {
-  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title      String      @unique @db.VarChar(255)
-  admin      User        @relation(fields: [adminId], references: [id])
-  adminId    String      @unique @db.Uuid
-  archived   Boolean     @default(false)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @default(now())
-  challenges Challenge[]
-  projects Project[]
+  id         String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title      String             @unique @db.VarChar(255)
+  admin      User               @relation(fields: [adminId], references: [id])
+  adminId    String             @db.Uuid
+  archived   Boolean            @default(false)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @default(now())
+  challenges TagsOnChallenges[]
+  projects   TagsOnProjects[]
 }
 
 model Challenge {
-  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title              String     @db.VarChar(255)
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title              String             @db.VarChar(255)
   description        String
-  archived           Boolean    @default(false)
-  challengeManager   User       @relation(fields: [challengeManagerId], references: [id])
-  challengeManagerId String     @unique @db.Uuid
-  createdAt          DateTime   @default(now())
-  updatedAt          DateTime   @default(now())
-  tags               Tag[]
+  archived           Boolean            @default(false)
+  publiched          Boolean            @default(true)
+  challengeManager   User               @relation(fields: [challengeManagerId], references: [id])
+  challengeManagerId String             @db.Uuid
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @default(now())
+  tags               TagsOnChallenges[]
   solutions          Solution[]
+}
+
+model TagsOnChallenges {
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  challengeId String    @db.Uuid
+  tag         Tag       @relation(fields: [tagId], references: [id])
+  tagId       String    @db.Uuid
+  assignedAt  DateTime  @default(now())
+
+  @@id([challengeId, tagId])
 }
 
 model Solution {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   repoUrl     String    @db.VarChar(255)
   challenge   Challenge @relation(fields: [challengeId], references: [id])
-  challengeId String    @unique @db.Uuid
+  challengeId String    @db.Uuid
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
 }
 
 model Project {
-  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title         String         @db.VarChar(255)
-  repoUrl       String         @db.VarChar(255)
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String           @db.VarChar(255)
+  repoUrl       String           @db.VarChar(255)
   description   String
-  solved        Boolean        @default(false)
-  archived      Boolean        @default(false)
+  solved        Boolean          @default(false)
+  archived      Boolean          @default(false)
+  publiched     Boolean          @default(false)
   resolvedBy    String?
-  user          User           @relation(fields: [userId], references: [id])
-  userId        String         @unique @db.Uuid
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now())
+  user          User             @relation(fields: [userId], references: [id])
+  userId        String           @db.Uuid
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now())
   contributions Contribution[]
-  tags Tag[]
+  tags          TagsOnProjects[]
+}
+
+model TagsOnProjects {
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  String   @db.Uuid
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      String   @db.Uuid
+  assignedAt DateTime @default(now())
+
+  @@id([projectId, tagId])
 }
 
 model Contribution {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   project       Project  @relation(fields: [projectId], references: [id])
-  projectId     String   @unique @db.Uuid
+  projectId     String   @db.Uuid
   contributor   User     @relation(fields: [contributorId], references: [id])
-  contributorId String   @unique @db.Uuid
+  contributorId String   @db.Uuid
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())
 }
