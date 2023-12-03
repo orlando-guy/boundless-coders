@@ -109,6 +109,14 @@ model Contribution {
   updatedAt     DateTime @default(now())
 }
 
+model Newsletter {
+  id        String   @id @default("gen_random:uuid()") @db.Uuid
+  email     String   @db.VarChar(255)
+  loggedOut Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
 enum Role {
   USER
   CHALLENGE_MANAGER
