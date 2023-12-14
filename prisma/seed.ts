@@ -15,7 +15,6 @@ const TAGS = [
     "développement backend"
 ]
 
-
 async function seedDatabase() {
     try {
         // Seed Users
@@ -47,12 +46,14 @@ async function seedDatabase() {
         if (admin && allUsers.length > 0) {
             // Seed Tags
             const tags = await prisma.tag.createMany({
-                data: Array.from({ length: 10 }, () => ({
-                    title: TAGS[faker.number.int({ min: 0, max: TAGS.length - 1 })],
+                data: Array.from(TAGS, (tag) => ({
+                    title: tag,
                     adminId: admin.id,
                     archived: faker.datatype.boolean()
-                }))
+                })),
+                skipDuplicates: true
             })
+            tags.count > 0 && console.log('[SEED] Successfully create tag records.')
 
             const availableTags = await prisma.tag.findMany({
                 select: { id: true }
@@ -62,9 +63,10 @@ async function seedDatabase() {
                 // Seed Challenge
                 const challengesId: string[] = []
                 const challengeData: Prisma.ChallengeCreateInput[] = Array
-                    .from({ length: 12 }, () => ({
-                        title: faker.lorem.word(3),
-                        description: faker.lorem.paragraphs(6),
+                    .from({ length: 1 }, () => ({
+                        title: faker.lorem.word(35),
+                        description: faker.lorem.word(30),
+                        content: faker.lorem.paragraphs(6),
                         archived: faker.datatype.boolean(),
                         challengeManager: {
                             connect: {
