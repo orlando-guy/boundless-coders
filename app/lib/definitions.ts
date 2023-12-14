@@ -16,3 +16,28 @@ export type TableRows = {
     stars: string;
     links: string;
 }
+
+export type ChallengesWithTags = {
+    id: string;
+    title: string;
+    archived: boolean;
+    description: string;
+    tags: {
+        tag: {
+            title: string;
+        }
+    }[];
+}[]
+
+export type tagsWithChallengesCount = ({
+    _count: {
+        challenges: number;
+    };
+} & {
+    id: string;
+    title: string;
+    adminId: string;
+    archived: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+})[]

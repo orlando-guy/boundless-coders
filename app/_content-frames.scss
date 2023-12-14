@@ -1,0 +1,89 @@
+@use '@carbon/react/scss/breakpoint' as *;
+
+.content-frames {
+    @include breakpoint(md) {
+        padding-left: 0;
+    }
+
+    .content-frames__sidebar {
+        padding-left: 0;
+        padding-right: 0;
+        display: none;
+
+        @include breakpoint(lg) {
+            display: block;
+            margin-left: 0;
+        }
+
+        .content-frames__filters {
+            width: 100%;
+            border-right: 1px solid #c6c6c6;
+            background-color: #fff;
+
+            .filters-box {
+                margin-top: 2.5rem;
+
+                .list-box__menu-item {
+                    color: #525252;
+                    --webkit-hyphens: auto;
+                    hyphens: auto;
+
+                    &:hover {
+                        color: #161616;
+                    }
+                }
+
+                ul {
+                    margin-bottom: 2rem;
+
+                    li {
+                        font-size: 1rem;
+                        font-weight: 400;
+                        line-height: 1.375;
+                        letter-spacing: 0;
+                        display: block;
+                        position: relative;
+                        color: #525252;
+                        --webkit-hyphens: auto;
+                        hyphens: auto;
+
+                        a {
+                            text-decoration: none;
+                            color: #525252;
+                            display: block;
+                            width: 100%;
+
+                            &:hover {
+                                color: #161616;
+                            }
+                        }
+
+                        &:hover {
+                            width: 100%;
+                            background-color: #e6e6e6;
+                            color: #161616;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .content-frames__right-side {
+        .mobile-filters {
+            width: 100%;
+            display: none;
+            margin-bottom: 1rem;
+
+            @include breakpoint-down(lg) {
+                display: flex;
+                gap: .25rem;
+                flex-direction: row-reverse;
+            }
+        }
+
+        .cds--unstable-pagination {
+            max-width: 100% !important;
+        }
+    }
+}
