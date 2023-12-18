@@ -36,8 +36,8 @@ const HeaderNavbar = () => {
                         <Link href="/repos" passHref legacyBehavior>
                             <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
                         </Link>
-                        <Link href="/" passHref legacyBehavior>
-                            <HeaderMenuItem href="/">Les défis de codage</HeaderMenuItem>
+                        <Link href="/challenges" passHref legacyBehavior>
+                            <HeaderMenuItem href="/challenges">Les défis de codage</HeaderMenuItem>
                         </Link>
                     </HeaderNavigation>
                     <SideNav

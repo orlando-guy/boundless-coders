@@ -41,10 +41,13 @@ model Tag {
 
 model Challenge {
   id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title              String             @db.VarChar(255)
+  title              String             @unique @db.VarChar(255)
   description        String
+  content            String
+  slug               String             @unique @db.VarChar(255)
   archived           Boolean            @default(false)
-  publiched          Boolean            @default(true)
+  published          Boolean            @default(true)
+  level              Level              @default(ENTRY)
   challengeManager   User               @relation(fields: [challengeManagerId], references: [id])
   challengeManagerId String             @db.Uuid
   createdAt          DateTime           @default(now())
@@ -110,7 +113,7 @@ model Contribution {
 }
 
 model Newsletter {
-  id        String   @id @default("gen_random:uuid()") @db.Uuid
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email     String   @db.VarChar(255)
   loggedOut Boolean  @default(false)
   createdAt DateTime @default(now())
@@ -121,4 +124,10 @@ enum Role {
   USER
   CHALLENGE_MANAGER
   ADMIN
+}
+
+enum Level {
+  ENTRY
+  MIDDLE
+  ADVANCED
 }
