@@ -55,8 +55,6 @@ export async function filteredChallenges(currentPage: number, query: string) {
 
     try {
         if (query !== '') {
-            console.log(query)
-
             filteredChallenges = await prisma.challenge.findMany({
                 skip: offset,
                 take: 10,
@@ -163,7 +161,7 @@ export async function fetchChallengeBySlug(slug: string) {
             }
         })
         return challenge
-    } catch(error) {
+    } catch (error) {
         console.error('Database error', error)
         throw new Error('Failed to fetch challenge data.')
     }

@@ -28,16 +28,16 @@ const generateLevel = () => {
 async function seedDatabase() {
     try {
         // Seed Users
-        // const users = await prisma.user.createMany({
-        //     data: Array.from({ length: 10 }, () => ({
-        //         username: faker.internet.userName(),
-        //         email: faker.internet.email(),
-        //         password: faker.internet.password(),
-        //         githubId: faker.number.int({ min: 0, max: 1000 }),
-        //         role: generateRole()
-        //     }))
-        // });
-        // users.count !== 0 && console.log("[SEED] Successfully create user records")
+        const users = await prisma.user.createMany({
+            data: Array.from({ length: 10 }, () => ({
+                username: faker.internet.userName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                githubId: faker.number.int({ min: 0, max: 1000 }),
+                role: generateRole()
+            }))
+        });
+        users.count !== 0 && console.log("[SEED] Successfully create user records")
 
         // Get different types of user
         const allUsers = await prisma.user.findMany()
@@ -56,15 +56,15 @@ async function seedDatabase() {
 
         if (admin && allUsers.length > 0) {
             // Seed Tags
-            // const tags = await prisma.tag.createMany({
-            //     data: Array.from(TAGS, (tag) => ({
-            //         title: tag,
-            //         adminId: admin.id,
-            //         archived: faker.datatype.boolean()
-            //     })),
-            //     skipDuplicates: true
-            // })
-            // tags.count > 0 && console.log('[SEED] Successfully create tag records.')
+            const tags = await prisma.tag.createMany({
+                data: Array.from(TAGS, (tag) => ({
+                    title: tag,
+                    adminId: admin.id,
+                    archived: faker.datatype.boolean()
+                })),
+                skipDuplicates: true
+            })
+            tags.count > 0 && console.log('[SEED] Successfully create tag records.')
 
             const availableTags = await prisma.tag.findMany({
                 select: { id: true }
@@ -130,46 +130,46 @@ async function seedDatabase() {
                     solutions.count > 0 && console.log('[SEED] Successfully create solution records.')
                 }
             }
-            // if (availableTags.length > 0) {
-            //     // Seed Project
-            //     const projectData: Prisma.ProjectCreateInput[] = Array.from({ length: 10 }, () => ({
-            //         title: faker.lorem.words(20),
-            //         repoUrl: faker.internet.url(),
-            //         description: faker.lorem.paragraphs(3),
-            //         user: {
-            //             connect: {
-            //                 id: allUsers[faker.number.int({ min: 0, max: allUsers.length - 1 })].id,
-            //             }
-            //         },
-            //         tags: {
-            //             create: [
-            //                 {
-            //                     assignedAt: new Date(),
-            //                     tag: {
-            //                         connect: {
-            //                             id: availableTags[faker.number.int({ min: 0, max: availableTags.length - 1 })].id,
-            //                         }
-            //                     }
-            //                 },
-            //                 {
-            //                     assignedAt: new Date(),
-            //                     tag: {
-            //                         connect: {
-            //                             id: availableTags[faker.number.int({ min: 0, max: availableTags.length - 1 })].id,
-            //                         }
-            //                     }
-            //                 }
-            //             ]
-            //         }
-            //     }))
+            if (availableTags.length > 0) {
+                // Seed Project
+                const projectData: Prisma.ProjectCreateInput[] = Array.from({ length: 10 }, () => ({
+                    title: faker.lorem.words(20),
+                    repoUrl: faker.internet.url(),
+                    description: faker.lorem.paragraphs(3),
+                    user: {
+                        connect: {
+                            id: allUsers[faker.number.int({ min: 0, max: allUsers.length - 1 })].id,
+                        }
+                    },
+                    tags: {
+                        create: [
+                            {
+                                assignedAt: new Date(),
+                                tag: {
+                                    connect: {
+                                        id: availableTags[faker.number.int({ min: 0, max: availableTags.length - 1 })].id,
+                                    }
+                                }
+                            },
+                            {
+                                assignedAt: new Date(),
+                                tag: {
+                                    connect: {
+                                        id: availableTags[faker.number.int({ min: 0, max: availableTags.length - 1 })].id,
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }))
 
-            //     for (const p of projectData) {
-            //         const project = await prisma.project.create({
-            //             data: p
-            //         })
-            //         console.log('[SEED] created project with id:', project.id)
-            //     }
-            // }
+                for (const p of projectData) {
+                    const project = await prisma.project.create({
+                        data: p
+                    })
+                    console.log('[SEED] created project with id:', project.id)
+                }
+            }
         }
     } catch (error) {
         console.error('Error from seeding:', error)
