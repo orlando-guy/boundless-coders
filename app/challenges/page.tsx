@@ -16,7 +16,6 @@ export default async function ChallengesPage({ searchParams }: Readonly<{
     const topic = searchParams?.topic ?? ''
     const challenges = await filteredChallenges(currentPage, topic)
     const totalChallenges = topic === '' ? await countChallenges() : challenges.length
-    console.log(challenges)
     return (
         <section className="py-6 challenges-page">
             <ChallengeContentFrames
