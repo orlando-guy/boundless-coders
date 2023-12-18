@@ -6,6 +6,7 @@
 @use '@/app/ui/info/info';
 @use '@/app/ui/tiles/tiles';
 @use '@/app/content-frames';
+@use '@/app/challenge-detail-page';
 @use '@/app/ui/footer/footer';
 
 html,
@@ -74,22 +75,24 @@ body {
     &.flex-grow-1 {
         flex-grow: 1;
     }
-}
-
-.flex.flex-wrap {
-    flex-wrap: wrap;
-}
-
-.flex.justify-between {
-    justify-content: space-between;
-}
-
-.flex.justify-evenly {
-    justify-content: space-evenly;
-}
-
-.flex.items-center {
-    align-items: center;
+    &.justify-center {
+        justify-content: center;
+    }
+    &.flex-wrap {
+        flex-wrap: wrap;
+    }
+    
+    &.justify-between {
+        justify-content: space-between;
+    }
+    
+    &.justify-evenly {
+        justify-content: space-evenly;
+    }
+    
+    &.items-center {
+        align-items: center;
+    }
 }
 
 .flex-center {
@@ -213,6 +216,18 @@ body {
     padding-top: .75rem;
 }
 
+.pt-4 {
+    padding-top: 1rem;
+}
+
+.pt-5 {
+    padding-top: 1.25rem;
+}
+
+.pt-6 {
+    padding-top: 1.5rem;
+}
+
 .pb-1 {
     padding-bottom: .25rem;
 }
@@ -227,6 +242,14 @@ body {
 
 .pb-4 {
     padding-bottom: 1rem;
+}
+
+.pb-5 {
+    padding-bottom: 1.25rem;
+}
+
+.pb-6 {
+    padding-bottom: 1.5rem;
 }
 
 .mt-auto {

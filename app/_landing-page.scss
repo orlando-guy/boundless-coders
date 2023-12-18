@@ -105,7 +105,7 @@
     @include type-style('heading-01');
 }
 
-.landing-page__banner,
+.landing-page__banner.cds--css-grid-column,
 .landing-page__r2,
 .landing-page__r3 {
     margin-left: -20px;

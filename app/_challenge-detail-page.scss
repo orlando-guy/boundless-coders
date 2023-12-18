@@ -1,0 +1,84 @@
+.challenge-detail {
+    .markdown-body {
+        display: block;
+        word-wrap: break-word;
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5 {
+            margin-bottom: 16px;
+            margin-top: 24px;
+            // font-weight: 600;
+        }
+
+        h2 {
+            padding-bottom: .3rem;
+        }
+
+        p,
+        details,
+        blockquote,
+        ul,
+        ol,
+        dl,
+        table {
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+
+        ol, ul {
+            padding-left: 2em;
+        }
+
+        ol {
+            list-style: decimal;
+        }
+
+        ul {
+            list-style-type: disc;
+
+            li {
+                padding-top: .5rem;
+                padding-bottom: .5rem;
+            }
+        }
+
+            code, tt {
+                padding: .2em .4em;
+                margin: 0;
+                font-size: 85%;
+                white-space: break-spaces;
+                color: inherit;
+                background-color: #dbe1e7;
+                border-radius: 6px;
+            }
+
+        pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            color: #c9d1d9;
+            background-color: #161b22;
+            margin-bottom: 16px;
+
+            & > code {
+                display: inline;
+                max-width: auto;
+                padding: 0;
+                margin: 0;
+                overflow: visible;
+                line-height: inherit;
+                word-wrap: normal;
+                word-break: normal;
+                white-space: pre;
+                background-color: transparent;
+                border: 0;
+                font-size: 100%;
+                border-radius: 6px;
+            }
+        }
+    }
+}
