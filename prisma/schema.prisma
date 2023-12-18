@@ -1,0 +1,133 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgcrypto]
+}
+
+model User {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username      String         @unique @db.VarChar(255)
+  email         String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(255)
+  githubId      Int?
+  role          Role           @default(USER)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @default(now())
+  tags          Tag[]
+  challenges    Challenge[]
+  projects      Project[]
+  contributions Contribution[]
+}
+
+model Tag {
+  id         String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title      String             @unique @db.VarChar(255)
+  admin      User               @relation(fields: [adminId], references: [id])
+  adminId    String             @db.Uuid
+  archived   Boolean            @default(false)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @default(now())
+  challenges TagsOnChallenges[]
+  projects   TagsOnProjects[]
+}
+
+model Challenge {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title              String             @unique @db.VarChar(255)
+  description        String
+  content            String
+  slug               String             @unique @db.VarChar(255)
+  archived           Boolean            @default(false)
+  published          Boolean            @default(true)
+  level              Level              @default(ENTRY)
+  challengeManager   User               @relation(fields: [challengeManagerId], references: [id])
+  challengeManagerId String             @db.Uuid
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @default(now())
+  tags               TagsOnChallenges[]
+  solutions          Solution[]
+}
+
+model TagsOnChallenges {
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  challengeId String    @db.Uuid
+  tag         Tag       @relation(fields: [tagId], references: [id])
+  tagId       String    @db.Uuid
+  assignedAt  DateTime  @default(now())
+
+  @@id([challengeId, tagId])
+}
+
+model Solution {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  repoUrl     String    @db.VarChar(255)
+  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  challengeId String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now())
+}
+
+model Project {
+  id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title         String           @db.VarChar(255)
+  repoUrl       String           @db.VarChar(255)
+  description   String
+  solved        Boolean          @default(false)
+  archived      Boolean          @default(false)
+  publiched     Boolean          @default(false)
+  resolvedBy    String?
+  user          User             @relation(fields: [userId], references: [id])
+  userId        String           @db.Uuid
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @default(now())
+  contributions Contribution[]
+  tags          TagsOnProjects[]
+}
+
+model TagsOnProjects {
+  project    Project  @relation(fields: [projectId], references: [id])
+  projectId  String   @db.Uuid
+  tag        Tag      @relation(fields: [tagId], references: [id])
+  tagId      String   @db.Uuid
+  assignedAt DateTime @default(now())
+
+  @@id([projectId, tagId])
+}
+
+model Contribution {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project       Project  @relation(fields: [projectId], references: [id])
+  projectId     String   @db.Uuid
+  contributor   User     @relation(fields: [contributorId], references: [id])
+  contributorId String   @db.Uuid
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+}
+
+model Newsletter {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String   @db.VarChar(255)
+  loggedOut Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  CHALLENGE_MANAGER
+  ADMIN
+}
+
+enum Level {
+  ENTRY
+  MIDDLE
+  ADVANCED
+}

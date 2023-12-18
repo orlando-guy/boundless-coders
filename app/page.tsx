@@ -3,8 +3,6 @@
 import {
     Grid,
     Column,
-    Breadcrumb,
-    BreadcrumbItem,
     Tabs,
     Tab,
     TabList,
@@ -20,13 +18,14 @@ import {
 } from '@carbon/pictograms-react'
 import { ArrowRight } from '@carbon/icons-react'
 import { InfoCard, InfoSection } from '@/app/ui/info/info'
+import Link from 'next/link'
 
 export default function Home() {
     return (
         <section>
             <Grid className="landing-page" fullWidth>
                 <Column lg={16} md={8} sm={4} className="landing-page__banner px-10">
-                    
+
                     <div className='landing-page__heading pt-3'>
                         <h1>
                             Défiez vos capacités. <br />
@@ -37,15 +36,19 @@ export default function Home() {
                         </p>
                     </div>
                     <div className="landing-page__banner-actions">
-                        <Button
-                            renderIcon={ArrowRight}
-                            iconDescription="Right arrow to redirect user to another page"
-                        >Voir les défis</Button>
-                        <Button
-                            kind='tertiary'
-                            renderIcon={ArrowRight}
-                            iconDescription="Right arrow to redirect user to another page"
-                        >Voir les contributions</Button>
+                        <Link href="/challenges" passHref>
+                            <Button
+                                renderIcon={ArrowRight}
+                                iconDescription="Right arrow to redirect user to another page"
+                            >Voir les défis</Button>
+                        </Link>
+                        <Link href="/repos" passHref>
+                            <Button
+                                kind='tertiary'
+                                renderIcon={ArrowRight}
+                                iconDescription="Right arrow to redirect user to another page"
+                            >Voir les contributions</Button>
+                        </Link>
                     </div>
                 </Column>
                 <Column lg={16} md={8} sm={4} className="landing-page__r2">
@@ -68,10 +71,12 @@ export default function Home() {
                                             mettre un vrai projet sur votre CV, au lieu de ridicules « exemples de code ».
                                         </p>
                                         <div className="flex flex-wrap gap-3">
-                                            <Button
-                                                renderIcon={ArrowRight}
-                                                iconDescription="Right arrow to redirect user to another page"
-                                            >Voir les défis</Button>
+                                            <Link href="/challenges" passHref>
+                                                <Button
+                                                    renderIcon={ArrowRight}
+                                                    iconDescription="Right arrow to redirect user to another page"
+                                                >Voir les défis</Button>
+                                            </Link>
                                         </div>
                                     </Column>
                                     <Column md={4} lg={{ span: 8, offset: 7 }} sm={4}>
