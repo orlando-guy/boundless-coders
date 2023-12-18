@@ -19,6 +19,9 @@ export async function fetchChallengesWithTags() {
                         }
                     }
                 }
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         })
         return challenges
@@ -71,6 +74,7 @@ export async function filteredChallenges(currentPage: number, query: string) {
                 select: {
                     id: true,
                     title: true,
+                    slug: true,
                     archived: true,
                     description: true,
                     tags: {
@@ -87,6 +91,9 @@ export async function filteredChallenges(currentPage: number, query: string) {
                             }
                         }
                     }
+                },
+                orderBy: {
+                    createdAt: 'desc'
                 }
             })
         } else {
@@ -96,6 +103,7 @@ export async function filteredChallenges(currentPage: number, query: string) {
                 select: {
                     id: true,
                     title: true,
+                    slug: true,
                     archived: true,
                     description: true,
                     tags: {
@@ -107,6 +115,9 @@ export async function filteredChallenges(currentPage: number, query: string) {
                             }
                         }
                     }
+                },
+                orderBy: {
+                    createdAt: 'desc'
                 }
             })
         }
@@ -125,5 +136,35 @@ export async function countChallenges() {
     } catch (error) {
         console.error('Database error', error)
         throw new Error('Failed to count challenges data.')
+    }
+}
+
+export async function fetchChallengeBySlug(slug: string) {
+    noStore()
+    try {
+        const challenge = await prisma.challenge.findFirst({
+            where: {
+                slug: slug
+            },
+            select: {
+                title: true,
+                content: true,
+                description: true,
+                level: true,
+                tags: {
+                    select: {
+                        tag: {
+                            select: {
+                                title: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return challenge
+    } catch(error) {
+        console.error('Database error', error)
+        throw new Error('Failed to fetch challenge data.')
     }
 }

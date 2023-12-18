@@ -109,7 +109,7 @@ export default function ChallengeContentFrames(
                         <Column lg={4} md={4} sm={4} key={challenge.id} className='mb-1'>
                             <ClickableWithCustomIcon
                                 title={challenge.title}
-                                href='/'
+                                href={`/challenges/${challenge.slug}`}
                                 tags={challenge.tags}
                                 description={challenge.description}
                             />

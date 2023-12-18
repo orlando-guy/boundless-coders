@@ -41,9 +41,10 @@ model Tag {
 
 model Challenge {
   id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title              String             @db.VarChar(255)
+  title              String             @unique @db.VarChar(255)
   description        String
   content            String
+  slug               String             @unique @db.VarChar(255)
   archived           Boolean            @default(false)
   published          Boolean            @default(true)
   level              Level              @default(ENTRY)
@@ -128,5 +129,5 @@ enum Role {
 enum Level {
   ENTRY
   MIDDLE
-  AVANCED
+  ADVANCED
 }

@@ -20,6 +20,7 @@ export type TableRows = {
 export type ChallengesWithTags = {
     id: string;
     title: string;
+    slug: string;
     archived: boolean;
     description: string;
     tags: {
