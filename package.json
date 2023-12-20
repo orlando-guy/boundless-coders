@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -21,7 +21,8 @@
     "react": "^18",
     "react-dom": "^18",
     "remark": "^15.0.1",
-    "remark-html": "^16.0.1"
+    "remark-html": "^16.0.1",
+    "sharp": "^0.33.1"
   },
   "devDependencies": {
     "@octokit/types": "^12.3.0",
