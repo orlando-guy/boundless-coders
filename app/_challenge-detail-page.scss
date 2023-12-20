@@ -1,3 +1,5 @@
+@use '@carbon/react/scss/breakpoint' as *;
+
 .challenge-detail {
     .markdown-body {
         display: block;
@@ -10,7 +12,6 @@
         h5 {
             margin-bottom: 16px;
             margin-top: 24px;
-            // font-weight: 600;
         }
 
         h2 {
@@ -26,6 +27,16 @@
         table {
             margin-top: 0;
             margin-bottom: 16px;
+        }
+
+        p:has(img) {
+            text-align: center;
+            img {
+                object-fit: contain;
+                @include breakpoint-down(md) {
+                    width: 100%;
+                }
+            }
         }
 
         ol, ul {
