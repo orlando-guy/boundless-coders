@@ -2,7 +2,7 @@ import {
     filteredChallenges,
     fetchChallengesTags,
     countChallenges
-} from "../lib/data"
+} from "@/app/lib/data"
 import ChallengeContentFrames from "@/app/ui/challenge-content-frames"
 
 export default async function ChallengesPage({ searchParams }: Readonly<{
