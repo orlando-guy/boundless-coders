@@ -1,10 +1,10 @@
 'use client'
 
 import { ArrowRight } from "@carbon/icons-react";
-import { ClickableTile, Tag, Theme } from "@carbon/react";
+import { ClickableTile, Tag, Theme, Tile } from "@carbon/react";
 import Link from 'next/link'
 
-export const ClickableWithCustomIcon = (
+const ClickableWithCustomIcon = (
     { title, description, href, className, tags }: Readonly<{
         title: string;
         href: string;
@@ -51,4 +51,30 @@ export const ClickableWithCustomIcon = (
             </Link>
         </Theme>
     )
+}
+
+const DefaultTile = ({
+    title,
+    description,
+    className
+}: Readonly<{
+    title: string;
+    description?: string;
+    className?: string;
+}>) => {
+    return (
+        <Tile className={`clickable-tile h-full ${className ?? ''}`} id={title.replaceAll(' ', '-')}>
+            <div className="flex flex-col gap-3 mb-3">
+                <h4 className="clickable-tile__heading">{title}</h4>
+                {description && (
+                    <p className="clickable-tile__body">{description}</p>
+                )}
+            </div>
+        </Tile>
+    )
+}
+
+export {
+    ClickableWithCustomIcon,
+    DefaultTile
 }

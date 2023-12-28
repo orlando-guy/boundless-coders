@@ -12,7 +12,7 @@ import {
     SideNavItems,
     HeaderSideNavItems,
 } from '@carbon/react'
-import { UserAvatar, LogoGithub } from '@carbon/icons-react'
+import { UserAvatar, LogoGithub, Dashboard, /* List, */ IbmCloudProjects, Need } from '@carbon/icons-react'
 import Link from 'next/link'
 
 
@@ -23,9 +23,10 @@ const HeaderNavbar = () => {
                 <Header arial-labelledby="Carbon Navbar" className="max-vw-full">
                     <SkipToContent />
                     <HeaderMenuButton
-                        aria-label='Open menu'
+                        aria-label={isSideNavExpanded ? 'Close menu' : 'Open menu'}
                         onClick={onClickSideNavExpand}
                         isActive={isSideNavExpanded}
+                        aria-expanded={isSideNavExpanded}
                     />
                     <Link href='/' passHref legacyBehavior>
                         <HeaderName href='/' prefix=' '>
@@ -46,14 +47,16 @@ const HeaderNavbar = () => {
                         isPersistent={false}
                     >
                         <SideNavItems>
-                            <HeaderSideNavItems>
-                                <Link href="/repos" passHref legacyBehavior>
-                                    <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
-                                </Link>
-                                <Link href="/" passHref legacyBehavior>
-                                    <HeaderMenuItem href="/">Les défis de codage</HeaderMenuItem>
-                                </Link>
-                            </HeaderSideNavItems>
+                            {isSideNavExpanded && (
+                                <HeaderSideNavItems>
+                                    <Link href="/repos" passHref legacyBehavior>
+                                        <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
+                                    </Link>
+                                    <Link href="/" passHref legacyBehavior>
+                                        <HeaderMenuItem href="/">Les défis de codage</HeaderMenuItem>
+                                    </Link>
+                                </HeaderSideNavItems>
+                            )}
                         </SideNavItems>
                     </SideNav>
                     <HeaderGlobalBar>

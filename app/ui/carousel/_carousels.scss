@@ -1,0 +1,13 @@
+.swiper-button-secondary {
+    background-color: #262626;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, .5);
+    color: #c6c6c6 !important;
+    width: 2.25rem !important;
+    height: 2.25rem !important;
+    // opacity: 0;
+    padding: .5rem;
+
+    &::after {
+        font-size: inherit !important;
+    }
+}
