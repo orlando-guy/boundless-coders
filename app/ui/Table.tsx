@@ -19,12 +19,9 @@ export const ChallengeTable = () => {
         <TableContainer
             title="Challenges"
             description="With batch actions. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas accumsan mauris sed congue egestas. Integer varius mauris vel arcu pulvinar bibendum non sit amet ligula. Nullam ut nisi eu tellus aliquet vestibulum vel sit amet odio."
-            style={{ maxWidth: "calc(100% - 84px)" }}
             className="mt-3"
         >
-            <TableToolbar
-                style={{ width: "100% !important" }}
-            >
+            <TableToolbar>
                 <TableToolbarContent aria-hidden={false}>
                     <Button
                         tabIndex={-1}
