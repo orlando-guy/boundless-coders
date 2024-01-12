@@ -15,17 +15,12 @@ export const authConfig: NextAuthOptions = {
             }
             return Promise.resolve(session)
         },
-        async jwt({ token, user, session }) {
+        async jwt({ token, user }) {
             
             if (user) {
                 token.id = user.id
                 token.role = user.role
             }
-            console.log('within the jwt()', {
-                token,
-                user,
-                session
-            })
             return token
         },
         async signIn({ user }) {

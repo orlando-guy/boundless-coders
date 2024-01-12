@@ -9,7 +9,12 @@
     transition: width .3s ease;
     // box-shadow: 4px 7px 10px rgba($color: #000000, $alpha: .4);
 
-    @include breakpoint(md) {
+    @include breakpoint-down(lg) {
+        display: none;
+    }
+
+    @include breakpoint(lg) {
+        display: block;
         min-width: 4rem;
     }
 
@@ -23,7 +28,7 @@
         vertical-align: baseline;
 
 
-        @include breakpoint(md) {
+        @include breakpoint(lg) {
             min-width: 3rem;
             width: 3rem;
         }

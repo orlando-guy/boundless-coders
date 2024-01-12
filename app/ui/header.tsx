@@ -5,18 +5,23 @@ import {
     HeaderNavigation,
     HeaderMenuButton,
     HeaderMenuItem,
-    HeaderGlobalBar,
-    HeaderGlobalAction,
     SkipToContent,
     SideNav,
     SideNavItems,
     HeaderSideNavItems,
+    Button,
 } from '@carbon/react'
-import { UserAvatar, LogoGithub, Dashboard, /* List, */ IbmCloudProjects, Need } from '@carbon/icons-react'
+import { UserAvatar, LogoGithub, Dashboard, Development } from '@carbon/icons-react'
 import Link from 'next/link'
+import { Session } from 'next-auth'
+import { LoggedInUserPopover } from './popover/popover'
 
+const HeaderNavbar = ({
+    session
+}: Readonly<{
+    session?: Session | null
+}>) => {
 
-const HeaderNavbar = () => {
     return (
         <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
@@ -50,25 +55,53 @@ const HeaderNavbar = () => {
                             {isSideNavExpanded && (
                                 <HeaderSideNavItems>
                                     <Link href="/repos" passHref legacyBehavior>
-                                        <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
+                                        <HeaderMenuItem>Les contributions</HeaderMenuItem>
                                     </Link>
-                                    <Link href="/" passHref legacyBehavior>
-                                        <HeaderMenuItem href="/">Les défis de codage</HeaderMenuItem>
+                                    <Link href="/challenges" passHref legacyBehavior>
+                                        <HeaderMenuItem>Les défis de codage</HeaderMenuItem>
                                     </Link>
+                                    {session && (
+                                        <>
+                                            <Link href="/dashboard/in" passHref legacyBehavior>
+                                                <HeaderMenuItem>
+                                                    Tableau de bord
+                                                </HeaderMenuItem>
+                                            </Link>
+                                            <Link href="/dashboard/in" passHref legacyBehavior>
+                                                <HeaderMenuItem>
+                                                    Mes challenges
+                                                </HeaderMenuItem>
+                                            </Link>
+                                        </>
+                                    )}
                                 </HeaderSideNavItems>
                             )}
                         </SideNavItems>
                     </SideNav>
-                    <HeaderGlobalBar>
-                        <HeaderGlobalAction aria-label="Voir le projet" tooltipAlignment="center">
-                            <a href="https://github.com/orlando-guy/boundless-coders" target='_blank'>
-                                <LogoGithub size={20} />
-                            </a>
-                        </HeaderGlobalAction>
-                        <HeaderGlobalAction aria-label="Avatar de l'utilisateur" tooltipAlignment="center">
-                            <UserAvatar size={20} />
-                        </HeaderGlobalAction>
-                    </HeaderGlobalBar>
+                    <div className="flex flex-1 justify-end block-size-100">
+                        <Button
+                            hasIconOnly
+                            iconDescription='Le dépot Github'
+                            href='https://github.com/orlando-guy/boundless-coders'
+                            renderIcon={() => <LogoGithub size={20} />}
+                            kind="ghost"
+                        />
+                        {session ? (
+                            <LoggedInUserPopover
+                                userName={session.user?.name}
+                                userPicture={session.user?.image}
+                            />
+                        ) : (
+                            <Link href="/sign-in" passHref>
+                                <Button
+                                    hasIconOnly
+                                    iconDescription='Le dépot Github'
+                                    renderIcon={() => <UserAvatar size={20} />}
+                                    kind="ghost"
+                                />
+                            </Link>
+                        )}
+                    </div>
                 </Header>
             )}
         />

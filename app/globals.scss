@@ -6,9 +6,10 @@
 @use '@/app/ui/info/info';
 @use '@/app/ui/tiles/tiles';
 @use '@/app/ui/challenges/trend-challenge-widget';
-@use  '@/app/ui/carousel/carousels';
+@use '@/app/ui/carousel/carousels';
 @use '@/app/content-frames';
 @use '@/app/challenge-detail-page';
+@use '@/app/ui/popover/popover';
 @use '@/app/ui/sidebar/sidebar';
 @use '@/app/ui/footer/footer';
 
@@ -17,7 +18,7 @@ body,
 main,
 section,
 footer {
-    width: 100vw !important;
+    width: 100vw;
     overflow-x: hidden !important;
 }
 
@@ -34,18 +35,28 @@ body {
     }
 }
 
-.cds--content, .container {
+.cds--content,
+.container {
     margin-top: 3rem;
     padding: 0 !important;
     background: var(--cds-background);
 }
 
-.cds--content .cds--css-grid, .container {
+.cds--content .cds--css-grid,
+.container {
     max-width: 100%;
 
     @include breakpoint(md) {
         padding-left: 20px;
         padding-right: 20px;
+    }
+}
+
+.user-dashboard-provider {
+    padding: .75rem .75rem .75rem 4.5rem;
+
+    @include breakpoint-down(lg) {
+        padding: .75rem .75rem .75rem .75rem;
     }
 }
 
@@ -85,18 +96,30 @@ body {
 .w-full {
     width: 100%;
 }
+
 .vw-full {
     height: 100vw;
 }
+
 .h-full {
     height: 100%;
 }
+
 .vh-full {
     height: 100vh;
 }
+
+.block-size-100 {
+    block-size: 100%;
+}
+
 /* Displays */
 .flex {
     display: flex;
+
+    &.flex-1 {
+        flex: 1 1 0%;
+    }
 
     &.flex-col {
         flex-direction: column;
@@ -105,24 +128,31 @@ body {
     &.flex-row {
         flex-direction: row;
     }
+
     &.flex-grow-1 {
         flex-grow: 1;
     }
+
     &.justify-center {
         justify-content: center;
     }
+
     &.flex-wrap {
         flex-wrap: wrap;
     }
-    
+
     &.justify-between {
         justify-content: space-between;
     }
-    
+
     &.justify-evenly {
         justify-content: space-evenly;
     }
-    
+
+    &.justify-end {
+        justify-content: flex-end;
+    }
+
     &.items-center {
         align-items: center;
     }
@@ -155,34 +185,69 @@ body {
 }
 
 /* Spacing */
+.p-0 {
+    padding: 0 !important;
+}
+
+.p-1 {
+    padding: .25rem;
+}
+
+.p-2 {
+    padding: .5rem;
+}
+
+.p-3 {
+    padding: .75rem;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+.p-5 {
+    padding: 1.25rem;
+}
+
+.p-6 {
+    padding: 1.5rem;
+}
+
 .px-0 {
     padding-left: 0;
     padding-right: 0;
 }
+
 .px-1 {
     padding-left: .25rem;
     padding-right: .25rem;
 }
+
 .px-2 {
     padding-left: .5rem;
     padding-right: .5rem;
 }
+
 .px-3 {
     padding-left: .75rem;
     padding-right: .75rem;
 }
+
 .px-4 {
     padding-left: 1rem;
     padding-right: 1rem;
 }
+
 .px-5 {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
 }
+
 .px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem; //24px - $spacing-06
 }
+
 .px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
@@ -192,38 +257,47 @@ body {
     padding-left: 2.5rem;
     padding-right: 2.5rem;
 }
+
 .px-16 {
     padding-left: 4rem;
     padding-right: 4rem;
 }
+
 .py-0 {
     padding-top: 0;
     padding-bottom: 0;
 }
+
 .py-1 {
     padding-top: .25rem;
     padding-bottom: .25rem;
 }
+
 .py-2 {
     padding-top: .5rem;
     padding-bottom: .5rem;
 }
+
 .py-3 {
     padding-top: .75rem;
     padding-bottom: .75rem;
 }
+
 .py-4 {
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
+
 .py-5 {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
 }
+
 .py-6 {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem; //24px - $spacing-06
 }
+
 .py-8 {
     padding-top: 2rem;
     padding-bottom: 2rem;
@@ -233,10 +307,12 @@ body {
     padding-top: 2.5rem;
     padding-bottom: 2.5rem;
 }
+
 .py-16 {
     padding-top: 4rem;
     padding-bottom: 4rem;
 }
+
 .pt-1 {
     padding-top: .25rem;
 }
@@ -344,6 +420,7 @@ body {
 .mb-4 {
     margin-bottom: 1.25rem;
 }
+
 /* Lists */
 .list-unstyle {
     list-style-type: none;
@@ -363,15 +440,26 @@ body {
 }
 
 /* Text */
-.text-center { text-align: center; }
+.text-center {
+    text-align: center;
+}
+
 .text-sm {
-    font-size: 0.875rem/* 14px */;
-    line-height: 1.25rem/* 20px */;
+    font-size: 0.875rem
+        /* 14px */
+    ;
+    line-height: 1.25rem
+        /* 20px */
+    ;
 }
 
 .text-lg {
-    font-size: 1.125rem/* 18px */;
-    line-height: 1.75rem/* 28px */;
+    font-size: 1.125rem
+        /* 18px */
+    ;
+    line-height: 1.75rem
+        /* 28px */
+    ;
 }
 
 .text-white {
@@ -386,7 +474,10 @@ body {
     color: colors.$gray-50
 }
 
-.text-decoration-none { text-decoration: none !important; }
+.text-decoration-none {
+    text-decoration: none !important;
+}
+
 /* Border & Rounded */
 .rounded-none {
     border-radius: 0;

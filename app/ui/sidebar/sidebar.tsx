@@ -11,7 +11,7 @@ export default function SideBar({
             <div className='left-sidebar'>
                 <ul className="left-sidebar__menu-items">
                     <li className="left-sidebar__menu-item">
-                        <Link href="/">
+                        <Link href="/dashboard/in">
                             <Dashboard />
                             <span>Tableau de bord</span>
                         </Link>

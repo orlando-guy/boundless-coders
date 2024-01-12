@@ -4,16 +4,19 @@ import HeaderNavbar from "@/app/ui/header"
 import { Theme } from '@carbon/react'
 import Footer from "@/app/ui/footer/footer"
 import SideBar from "@/app/ui/sidebar/sidebar"
+import { Session } from "next-auth"
 
 const Providers = ({
-    children
+    children,
+    session
 }: Readonly<{
-    children: React.ReactNode
+    children: React.ReactNode;
+    session?: Session | null;
 }>) => {
     return (
         <>
             <Theme theme="g100">
-                <HeaderNavbar />
+                <HeaderNavbar session={session} />
             </Theme>
             <main className="container">
                 {children}
@@ -26,17 +29,19 @@ const Providers = ({
 }
 
 const UserDashboardProvider = ({
-    children
+    children,
+    session
 }: Readonly<{
-    children: React.ReactNode
+    children: React.ReactNode;
+    session?: Session | null;
 }>) => (
     <>
         <Theme theme="g100">
-            <HeaderNavbar />
+            <HeaderNavbar session={session} />
         </Theme>
         <main className="container">
             <SideBar />
-            <Theme theme="g100" className="flex flex-1 flex-col min-vh-full w-full" style={{ padding: ".75rem .75rem .75rem 4.5rem" }}>
+            <Theme theme="g100" className="min-vh-full w-full user-dashboard-provider">
                 {children}
             </Theme>
         </main>
