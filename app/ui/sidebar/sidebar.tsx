@@ -29,7 +29,7 @@ export default function SideBar({
                         </Link>
                     </li>
                     <li className="left-sidebar__menu-item">
-                        <Link href="/">
+                        <Link href="/dashboard/in/my-challenges">
                             <Development />
                             <span>Mes challenges</span>
                         </Link>

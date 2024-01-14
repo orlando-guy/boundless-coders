@@ -166,3 +166,50 @@ export async function fetchChallengeBySlug(slug: string) {
         throw new Error('Failed to fetch challenge data.')
     }
 }
+
+export async function fetchChallengesByAuthor(authorId: string) {
+    noStore()
+
+    try {
+        const challenges = await prisma.challenge.findMany({
+            where: {
+                challengeManager: {
+                    id: {
+                        equals: authorId
+                    }
+                }
+            },
+            select: {
+                id: true,
+                title: true,
+                archived: true,
+                published: true,
+                createdAt: true,
+                _count: {
+                    select: { solutions: true }
+                }
+            },
+        })
+        return challenges
+    } catch (error) {
+        console.error('Database Error', error)
+        throw new Error('Failed to fetch filtered challenges.')
+    }
+}
+
+export async function fetchTags() {
+    noStore()
+    
+    try {
+        const tags = await prisma.tag.findMany({
+            select: {
+                id: true,
+                title: true,
+            }
+        })
+        return tags
+    } catch(error) {
+        console.error('Database Error', error)
+        throw new Error('Failed to fetch tags.')
+    }
+}
