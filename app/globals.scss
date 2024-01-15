@@ -4,6 +4,7 @@
 @use '@carbon/react/scss/colors';
 @use '@/app/landing-page';
 @use '@/app/d-my-challenges-page';
+@use '@/app/not-found';
 @use '@/app/ui/info/info';
 @use '@/app/ui/tiles/tiles';
 @use '@/app/ui/challenges/trend-challenge-widget';
@@ -112,6 +113,23 @@ body {
 
 .block-size-100 {
     block-size: 100%;
+}
+
+/* Positions */
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+
+    &.absolute--center {
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
 }
 
 /* Displays */
