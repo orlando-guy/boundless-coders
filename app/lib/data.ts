@@ -189,6 +189,9 @@ export async function fetchChallengesByAuthor(authorId: string) {
                     select: { solutions: true }
                 }
             },
+            orderBy: {
+                createdAt: "desc"
+            }
         })
         return challenges
     } catch (error) {
@@ -197,9 +200,37 @@ export async function fetchChallengesByAuthor(authorId: string) {
     }
 }
 
+export async function fetchChallengeById(challengeId: string) {
+    noStore()
+
+    try {
+        const challenge = await prisma.challenge.findUnique({
+            where: {
+                id: challengeId
+            },
+            select: {
+                id: true,
+                title: true,
+                description: true,
+                level: true,
+                content: true,
+                tags: {
+                    select: {
+                        tagId: true
+                    }
+                }
+            }
+        })
+        return challenge
+    } catch (error) {
+        console.error('Database Error', error)
+        throw new Error('Failed to fetch challenge.')
+    }
+}
+
 export async function fetchTags() {
     noStore()
-    
+
     try {
         const tags = await prisma.tag.findMany({
             select: {
@@ -208,7 +239,7 @@ export async function fetchTags() {
             }
         })
         return tags
-    } catch(error) {
+    } catch (error) {
         console.error('Database Error', error)
         throw new Error('Failed to fetch tags.')
     }

@@ -1,4 +1,5 @@
 import { Endpoints } from "@octokit/types";
+import { $Enums } from "@prisma/client";
 
 export type TableHeaders = {
     key: string;
@@ -57,4 +58,15 @@ export type challengeWithCountedSolution = {
 export type TagField = {
     id: string;
     title: string;
+}
+
+export type ChallengeFields = {
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+    level: $Enums.Level;
+    tags: {
+        tagId: string;
+    }[];
 }
