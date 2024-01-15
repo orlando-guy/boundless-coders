@@ -15,6 +15,7 @@ import {
 } from "@carbon/react";
 import { challengeWithCountedSolution } from "../lib/definitions";
 import Link from "next/link";
+import { DeleteChallengeButton, UpdateChallengeButton } from "@/app/ui/challenges/buttons";
 
 export const ChallengeTable = ({
     dataChallenges,
@@ -54,27 +55,15 @@ export const ChallengeTable = ({
                 <TableBody>
                     {dataChallenges && dataChallenges
                         .map(challenge => (
-                            <TableRow>
+                            <TableRow key={challenge.id}>
                                 <TableCell>{challenge.title}</TableCell>
                                 <TableCell>{challenge.published ? "publié" : "en attente"}</TableCell>
                                 <TableCell>{challenge.createdAt.toLocaleDateString()}</TableCell>
                                 <TableCell>{challenge._count.solutions}</TableCell>
                                 <TableCell>
                                     <div className="flex">
-                                        <Button
-                                            hasIconOnly
-                                            iconDescription="Edit"
-                                            onClick={function noRefCheck() { }}
-                                            renderIcon={Edit}
-                                            kind="ghost"
-                                        />
-                                        <Button
-                                            hasIconOnly
-                                            iconDescription="Supprimer"
-                                            onClick={function noRefCheck() { }}
-                                            renderIcon={TrashCan}
-                                            kind="ghost"
-                                        />
+                                        <UpdateChallengeButton id={challenge.id} />
+                                        <DeleteChallengeButton id={challenge.id} />
                                         <Button
                                             hasIconOnly
                                             iconDescription="Archiver"
