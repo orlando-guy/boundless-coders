@@ -1,10 +1,11 @@
 'use client'
 
 import React from 'react'
-import { Form, FormGroup, RadioButtonGroup, Checkbox, TextInput, TextArea, RadioButton, Button } from '@carbon/react'
+import { Form, RadioButtonGroup, TextInput, TextArea, RadioButton, Button } from '@carbon/react'
+import { ViewUpdate } from '@uiw/react-codemirror'
+import { useFormState } from 'react-dom'
 import MarkdownEditor from '@/app/ui/markdown-editor/markdown-editor'
 import { updateChallenge } from '@/app/lib/actions'
-import { ViewUpdate } from '@uiw/react-codemirror'
 import { useDebouncedCallback } from '@/app/lib/hooks'
 import { ChallengeFields, TagField } from '@/app/lib/definitions'
 
@@ -16,16 +17,19 @@ const EditChallengeForm = ({
     challenge: ChallengeFields
 }>) => {
     const [challengeContentValue, setChallengeContentValue] = React.useState(challenge.content)
+    const initialState = { message: "", errors: {} }
+    const updateChallengeWithId = updateChallenge.bind(null, challenge.id)
+    const [state, dispatch] = useFormState(updateChallengeWithId, initialState)
+
     const handleChangeChallengeContent = useDebouncedCallback((val: string, viewUpdate: ViewUpdate) => {
         setChallengeContentValue(val)
     }, 500)
-    const updateChallengeWithId = updateChallenge.bind(null, challenge.id)
 
-    const isDefaultChecked = (id:string) => !!challenge.tags.find(el => el.tagId === id)
+    // const isDefaultChecked = (id:string) => !!challenge.tags.find(el => el.tagId === id)
 
     return (
         <Form
-            action={updateChallengeWithId}
+            action={dispatch}
             aria-label='form to edit challenge'
         >
             <div className="flex flex-col gap-4">
@@ -37,6 +41,8 @@ const EditChallengeForm = ({
                     labelText='Le titre du défi'
                     placeholder="Écrivez votre premier roccourcisseur d'URL"
                     required
+                    invalid={!!state.errors?.title}
+                    invalidText={state.errors?.title?.join(' ')}
                 />
                 <TextArea
                     rows={4}
@@ -46,6 +52,8 @@ const EditChallengeForm = ({
                     labelText='Description'
                     placeholder="exemple: Ce défit consiste à créer votre propre raccourcisseur d'URL pensez à bit.ly ou à tinyurl.com"
                     required
+                    invalid={!!state.errors?.description}
+                    invalidText={state.errors?.description?.join(' ')}
                 />
                 <TextArea
                     rows={4}
@@ -54,6 +62,8 @@ const EditChallengeForm = ({
                     labelText='Contenue'
                     defaultValue={challengeContentValue}
                     hidden
+                    invalid={!!state.errors?.content}
+                    invalidText={state.errors?.content?.join(' ')}
                 />
 
                 <MarkdownEditor
@@ -65,6 +75,8 @@ const EditChallengeForm = ({
                     name='level'
                     legendText="Sélectionner le niveau de difficulter de ce défi"
                     defaultSelected={challenge.level}
+                    invalid={!!state.errors?.level}
+                    invalidText={state.errors?.level?.join(' ')}
                 >
                     <RadioButton
                         value="ENTRY"
@@ -79,7 +91,7 @@ const EditChallengeForm = ({
                         labelText="Avancé"
                     />
                 </RadioButtonGroup>
-
+                                
                 <Button type='submit'>
                     Enregistrer
                 </Button>
