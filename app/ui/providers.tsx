@@ -40,7 +40,7 @@ const UserDashboardProvider = ({
             <HeaderNavbar session={session} />
         </Theme>
         <main className="container">
-            <SideBar />
+            <SideBar session={session} />
             <Theme theme="g100" className="min-vh-full w-full user-dashboard-provider">
                 {children}
             </Theme>

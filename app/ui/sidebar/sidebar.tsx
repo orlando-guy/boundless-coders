@@ -1,12 +1,17 @@
 import { Dashboard, /* List, */ IbmCloudProjects, Need, Development } from '@carbon/icons-react'
+import { Session } from 'next-auth';
 import Link from 'next/link'
 
 export default function SideBar({
-    className
+    className,
+    session
 }: Readonly<{
-    className?: string
+    className?: string;
+    session?: Session | null;
 }>) {
-    return(
+    const challengeManagers = ['ADMIN', 'CHALLENGE_MANAGER']
+
+    return (
         <nav className={`left-sidebar-wrapper ${className ?? ''}`}>
             <div className='left-sidebar'>
                 <ul className="left-sidebar__menu-items">
@@ -28,12 +33,14 @@ export default function SideBar({
                             <span>Mes projets</span>
                         </Link>
                     </li>
-                    <li className="left-sidebar__menu-item">
-                        <Link href="/dashboard/in/my-challenges">
-                            <Development />
-                            <span>Mes challenges</span>
-                        </Link>
-                    </li>
+                    {(session && challengeManagers.includes(session.user.role))
+                        && (<li className="left-sidebar__menu-item">
+                            <Link href="/dashboard/in/my-challenges">
+                                <Development />
+                                <span>Mes challenges</span>
+                            </Link>
+                        </li>)
+                    }
                 </ul>
             </div>
         </nav>

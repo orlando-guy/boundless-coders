@@ -11,7 +11,7 @@ import {
     HeaderSideNavItems,
     Button,
 } from '@carbon/react'
-import { UserAvatar, LogoGithub, Dashboard, Development } from '@carbon/icons-react'
+import { UserAvatar, LogoGithub} from '@carbon/icons-react'
 import Link from 'next/link'
 import { Session } from 'next-auth'
 import { LoggedInUserPopover } from './popover/popover'
