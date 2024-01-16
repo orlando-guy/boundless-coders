@@ -1,7 +1,7 @@
 'use client'
 
-import { deleteChallenge } from '@/app/lib/actions'
-import { Edit, TrashCan } from '@carbon/icons-react'
+import { archiveChallenge, deleteChallenge } from '@/app/lib/actions'
+import { Box, Edit, TrashCan } from '@carbon/icons-react'
 import { Button } from '@carbon/react'
 import Link from 'next/link'
 
@@ -32,6 +32,23 @@ const DeleteChallengeButton = ({ id }: Readonly<{ id: string }>) => {
                 iconDescription="Supprimer"
                 renderIcon={TrashCan}
                 kind="ghost"
+                type='submit'
+            />
+        </form>
+    )
+}
+
+const ArchiveChallengeButton = ({ id }: Readonly<{ id: string }>) => {
+    const archiveChallengeWithId = archiveChallenge.bind(null, id)
+
+    return (
+        <form action={archiveChallengeWithId}>
+            <Button
+                hasIconOnly
+                iconDescription="Archiver"
+                renderIcon={Box}
+                kind="ghost"
+                type='submit'
             />
         </form>
     )
@@ -39,5 +56,6 @@ const DeleteChallengeButton = ({ id }: Readonly<{ id: string }>) => {
 
 export {
     UpdateChallengeButton,
-    DeleteChallengeButton
+    DeleteChallengeButton,
+    ArchiveChallengeButton
 }

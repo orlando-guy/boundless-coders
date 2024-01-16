@@ -182,6 +182,7 @@ export async function fetchChallengesByAuthor(authorId: string) {
             select: {
                 id: true,
                 title: true,
+                slug: true,
                 archived: true,
                 published: true,
                 createdAt: true,

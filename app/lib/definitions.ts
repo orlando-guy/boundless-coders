@@ -45,8 +45,9 @@ export type tagsWithChallengesCount = ({
 })[]
 
 export type challengeWithCountedSolution = {
-    title: string;
     id: string;
+    title: string;
+    slug: string;
     archived: boolean;
     published: boolean;
     createdAt: Date;

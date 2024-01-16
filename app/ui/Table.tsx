@@ -1,6 +1,5 @@
 'use client'
 
-import { Box, Edit, TrashCan } from "@carbon/icons-react";
 import {
     Button,
     Table,
@@ -15,7 +14,8 @@ import {
 } from "@carbon/react";
 import { challengeWithCountedSolution } from "../lib/definitions";
 import Link from "next/link";
-import { DeleteChallengeButton, UpdateChallengeButton } from "@/app/ui/challenges/buttons";
+import { ArchiveChallengeButton, DeleteChallengeButton, UpdateChallengeButton } from "@/app/ui/challenges/buttons";
+import { View } from "@carbon/icons-react";
 
 export const ChallengeTable = ({
     dataChallenges,
@@ -26,8 +26,8 @@ export const ChallengeTable = ({
 }>) => {
     return (
         <TableContainer
-            title="Challenges"
-            description="With batch actions. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas accumsan mauris sed congue egestas. Integer varius mauris vel arcu pulvinar bibendum non sit amet ligula. Nullam ut nisi eu tellus aliquet vestibulum vel sit amet odio."
+            title="Mes Challenges"
+            description="Cette vue à pour but de vous aidé à gérer les défis que vous publiez."
             className={`${className ?? ''} mt-3`}
         >
             <TableToolbar>
@@ -37,7 +37,7 @@ export const ChallengeTable = ({
                             tabIndex={-1}
                             kind="primary"
                         >
-                            Ajouter un nouveau
+                            Ajouter un challenge
                         </Button>
                     </Link>
                 </TableToolbarContent>
@@ -53,28 +53,32 @@ export const ChallengeTable = ({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {dataChallenges && dataChallenges
-                        .map(challenge => (
-                            <TableRow key={challenge.id}>
-                                <TableCell>{challenge.title}</TableCell>
-                                <TableCell>{challenge.published ? "publié" : "en attente"}</TableCell>
-                                <TableCell>{challenge.createdAt.toLocaleDateString()}</TableCell>
-                                <TableCell>{challenge._count.solutions}</TableCell>
-                                <TableCell>
-                                    <div className="flex">
-                                        <UpdateChallengeButton id={challenge.id} />
-                                        <DeleteChallengeButton id={challenge.id} />
+                    {dataChallenges?.map(challenge => (
+                        <TableRow key={challenge.id}>
+                            <TableCell>{challenge.title}</TableCell>
+                            <TableCell>{challenge.published ? "publié" : "en attente"}</TableCell>
+                            <TableCell>{challenge.createdAt.toLocaleDateString()}</TableCell>
+                            <TableCell>{challenge._count.solutions}</TableCell>
+                            <TableCell>
+                                <div className="flex">
+                                    <Link
+                                        href={`/challenges/${challenge.slug}`}
+                                        passHref
+                                    >
                                         <Button
                                             hasIconOnly
-                                            iconDescription="Archiver"
-                                            onClick={function noRefCheck() { }}
-                                            renderIcon={Box}
+                                            iconDescription="Voir le défi"
+                                            renderIcon={View}
                                             kind="ghost"
                                         />
-                                    </div>
-                                </TableCell>
-                            </TableRow>
-                        ))}
+                                    </Link>
+                                    <UpdateChallengeButton id={challenge.id} />
+                                    <DeleteChallengeButton id={challenge.id} />
+                                    <ArchiveChallengeButton id={challenge.id} />
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
         </TableContainer >
