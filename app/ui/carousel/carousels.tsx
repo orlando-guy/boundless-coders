@@ -10,6 +10,7 @@ import { SwiperOptions, Swiper as SwiperCore } from "swiper/types"
 
 interface ICarouselProps extends HTMLAttributes<HTMLDivElement> {
     children: React.ReactNode;
+    allowNavigation?: boolean;
     options?: SwiperOptions;
 }
 

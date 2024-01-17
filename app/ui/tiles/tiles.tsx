@@ -5,22 +5,23 @@ import { ClickableTile, Tag, Theme, Tile } from "@carbon/react";
 import Link from 'next/link'
 
 const ClickableWithCustomIcon = (
-    { title, description, href, className, tags }: Readonly<{
+    { title, description, href, className, tags, theme }: Readonly<{
         title: string;
         href: string;
         description?: string;
-        className?: string;
         tags?: {
             tag: {
                 title: string;
             }
         }[];
+        className?: string;
+        theme?: "g100" | "white" | "g10" | "g90";
     }>
 ) => {
     description ||= "Officia proident Lorem deserunt ex dolor Lorem ullamco et irure."
     const tileId = title.substring(0, 22).replaceAll(' ', '-')
     return (
-        <Theme theme="g100" className="h-full">
+        <Theme theme={theme ?? "g100"} className="h-full">
             <Link href={href} passHref legacyBehavior className="h-full">
                 <ClickableTile
                     id={tileId}

@@ -1,8 +1,13 @@
 import React from 'react'
-import { DefaultTile } from '@/app/ui/tiles/tiles'
+import { ClickableWithCustomIcon, DefaultTile } from '@/app/ui/tiles/tiles'
 import { Carousel } from '@/app/ui/carousel/carousels'
+import { ChallengesWithTags } from '@/app/lib/definitions'
 
-const TrendChallengeWidget = () => {
+const TrendChallengeWidget = ({
+    challenges
+}: Readonly<{
+    challenges: ChallengesWithTags
+}>) => {
     return (
         <div className="td-challenges-widget">
             <div className="td-challenges-widget__title">
@@ -27,29 +32,20 @@ const TrendChallengeWidget = () => {
                 >
                     <DefaultTile
                         title='Booster'
-                        description='Explorer BOUNDLESS CODERS avec cette sélection de challenges taille sur mesure pour vous aider à booster rapidement vos aptitudes'
+                        description='Explorer BOUNDLESS CODERS avec cette sélection de challenges taillé sur mesure pour vous aider à booster rapidement vos aptitudes'
                         className='td-challenges-widget__item item--intro'
                     />
-                    <DefaultTile
-                        title='Booster'
-                        description='Explorer BOUNDLESS CODERS avec cette sélection de challenges taille sur mesure pour vous aider à booster rapidement vos aptitudes'
-                        className='td-challenges-widget__item'
-                    />
-                    <DefaultTile
-                        title='Booster'
-                        description='Explorer BOUNDLESS CODERS avec cette sélection de challenges taille sur mesure pour vous aider à booster rapidement vos aptitudes'
-                        className='td-challenges-widget__item'
-                    />
-                    <DefaultTile
-                        title='Booster'
-                        description='Explorer BOUNDLESS CODERS avec cette sélection de challenges taille sur mesure pour vous aider à booster rapidement vos aptitudes'
-                        className='td-challenges-widget__item'
-                    />
-                    <DefaultTile
-                        title='Booster'
-                        description='Explorer BOUNDLESS CODERS avec cette sélection de challenges taille sur mesure pour vous aider à booster rapidement vos aptitudes'
-                        className='td-challenges-widget__item'
-                    />
+                    {challenges.length > 0 && challenges.map(challenge => (
+                        <ClickableWithCustomIcon
+                            title={challenge.title}
+                            href={`/challenges/${challenge.slug}`}
+                            tags={challenge.tags}
+                            description={challenge.description}
+                            theme="g90"
+                            className='td-challenges-widget__item'
+                            key={challenge.slug}
+                        />
+                    ))}
                 </Carousel>
             </div>
         </div>
