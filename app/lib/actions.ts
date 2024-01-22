@@ -17,29 +17,46 @@ export type PrevState = {
     message?: string | null
 }
 
-const FormSchema = z.object({
+export type SolutionPrevState = {
+    errors?: {
+        repoUrl?: string[];
+    };
+    success?: boolean | null;
+    message?: string | null;
+}
+
+const ChallengeFormSchema = z.object({
     id: z.string(),
     title: z.string().min(20, {
-        message: 'Veiller remplir le champ titre, ce dernier doit avoir au minimum 05 mots'
+        message: 'Veuillez remplir le champ titre, ce dernier doit avoir au minimum 05 mots'
     }),
     description: z.string().min(30, {
-        message: 'Veiller remplir le champ description, ce dernier doit avoir au minimum 20 mots',
+        message: 'Veuillez remplir le champ description, ce dernier doit avoir au minimum 20 mots',
     }),
     content: z.string().min(255, {
-        message: 'Veiller remplir le champ contenu ce dernier doit avoir au minimum 150 mots'
+        message: 'Veuillez remplir le champ contenu ce dernier doit avoir au minimum 150 mots'
     }),
     level: z.enum(['ENTRY', 'MIDDLE', 'ADVANCED'], {
         invalid_type_error: 'Veiller sélectionner le niveau de difficulté de ce défi'
     }),
     tags: z.array(z.string()).min(1, {
-        message: 'Veiller sélectionner le(s) tag(s) correspondant à ce défi'
+        message: 'Veuillez sélectionner le(s) tag(s) correspondant à ce défi'
     }).max(3, {
         message: "Vous ne pouvez sélectionner qu'un maximum de 3 tags"
     })
 })
+const SolutionFormSchema = z.object({
+    repoUrl: z.string().min(25, {
+        message: "Désolé, l'URL que vous avez saisie est trop courte."
+    }).max(255, {
+        message: "Cette URL est trop longue. Veuillez saisir quelque chose de court."
+    }).url('Veuillez saisir une URL valide.').includes('git', {
+        message: "L'URL que vous avez saisie ne semble correspondre à aucun dépot GitHub ou GitLab"
+    })
+})
 
-const CreateChallenge = FormSchema.omit({ id: true })
-const UpdateChallenge = FormSchema.omit({ id: true, tags: true })
+const CreateChallenge = ChallengeFormSchema.omit({ id: true })
+const UpdateChallenge = ChallengeFormSchema.omit({ id: true, tags: true })
 
 export async function createChallenge(
     prevState: PrevState,
@@ -107,8 +124,6 @@ export async function updateChallenge(
     prevState: PrevState,
     formData: FormData
 ) {
-    console.log({ challengeId, formData, prevState })
-
     const validatedFields = UpdateChallenge.safeParse({
         title: formData.get('title'),
         description: formData.get('description'),
@@ -179,6 +194,75 @@ export async function archiveChallenge(challengeId: string) {
     } catch (error) {
         return {
             message: 'Database Error: Failed to archive Challenge'
+        }
+    }
+}
+
+export async function createChallengeSolution(
+    challengeId: string,
+    prevState: SolutionPrevState,
+    formData: FormData
+) {
+    const session = await getServerAuthSession()
+    const userId = session?.user.id
+
+    const validatedFields = SolutionFormSchema.safeParse({
+        repoUrl: formData.get('repoUrl')
+    })
+
+    if (!validatedFields.success) {
+        return {
+            success: false,
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Érreur lors de la vérification du champ de saisi. Échec de l'enregistrement de la solution"
+        }
+    }
+
+    const { repoUrl } = validatedFields.data
+
+    try {
+        const isSolutionExists = await prisma.solution.findFirst({
+            where: {
+                repoUrl
+            },
+            select: {
+                id: true
+            }
+        })
+
+        if (isSolutionExists) {
+            return {
+                success: false,
+                message: "Cette solution existe déjà ! Veuillez soumettre une nouvelle solution"
+            }
+        }
+
+        await prisma.solution.create({
+            data: {
+                repoUrl,
+                challenge: {
+                    connect: {
+                        id: challengeId
+                    }
+                },
+                user: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            }
+        })
+        revalidatePath('/challenges')
+
+        return {
+            success: true,
+            message: 'La solution à bien été créer.'
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            success: false,
+            message: 'Échec lors de la création de la solution.'
         }
     }
 }

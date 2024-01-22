@@ -145,6 +145,7 @@ export async function fetchChallengeBySlug(slug: string) {
                 slug: slug
             },
             select: {
+                id: true,
                 title: true,
                 content: true,
                 description: true,
@@ -243,5 +244,27 @@ export async function fetchTags() {
     } catch (error) {
         console.error('Database Error', error)
         throw new Error('Failed to fetch tags.')
+    }
+}
+
+export async function countChallengeSolutions(challengeId: string) {
+    noStore()
+
+    try {
+        const count = await prisma.solution.count({
+            where: {
+                challenge: {
+                    id: challengeId
+                }
+            },
+            select: {
+                _all: true
+            }
+        })
+
+        return count._all
+    } catch(error) {
+        console.error('Database Error', error)
+        throw new Error('Failed to count solutions.')
     }
 }

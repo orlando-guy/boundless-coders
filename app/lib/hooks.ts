@@ -23,6 +23,16 @@ const useDebouncedCallback = (callback: Function, timer: number) => {
     return debouncedCallback;
 }
 
+function useToggle(initialValue: boolean): [boolean, () => void] {
+  const [value, setValue] = React.useState(initialValue);
+
+  const toggleValue = React.useCallback(() => {
+    setValue((currentValue) => !currentValue);
+  }, []);
+  return [value, toggleValue];
+}
+
 export {
-    useDebouncedCallback
+    useDebouncedCallback,
+    useToggle
 }

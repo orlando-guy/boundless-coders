@@ -10,8 +10,6 @@ export default async function ChallengeManagerPage() {
             <h1>Tableau de bord</h1>
             <br />
             <TrendChallengeWidget challenges={suggestedChallenges} />
-
         </>
-
     )
 }

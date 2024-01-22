@@ -27,6 +27,7 @@ model User {
   challenges    Challenge[]
   projects      Project[]
   contributions Contribution[]
+  Solution      Solution[]
 }
 
 model Account {
@@ -105,9 +106,11 @@ model TagsOnChallenges {
 
 model Solution {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  repoUrl     String    @db.VarChar(255)
+  repoUrl     String    @unique @db.VarChar(255)
   challenge   Challenge @relation(fields: [challengeId], references: [id])
   challengeId String    @db.Uuid
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String    @db.Uuid
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
 }
