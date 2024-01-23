@@ -263,8 +263,37 @@ export async function countChallengeSolutions(challengeId: string) {
         })
 
         return count._all
-    } catch(error) {
+    } catch (error) {
         console.error('Database Error', error)
         throw new Error('Failed to count solutions.')
+    }
+}
+
+export async function fetchSolutionsByAuthorId(authorId: string) {
+    noStore()
+
+    try {
+        const solutions = await prisma.solution.findMany({
+            where: {
+                user: {
+                    id: authorId
+                }
+            },
+            select: {
+                id: true,
+                repoUrl: true,
+                createdAt: true,
+                challenge: {
+                    select: {
+                        slug: true,
+                        title: true
+                    }
+                }
+            }
+        })
+        return solutions
+    } catch (error) {
+        console.log(error)
+        throw new Error('Failed to fetch Solutions by his Author.')
     }
 }

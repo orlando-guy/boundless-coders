@@ -1,13 +1,15 @@
 @use '@carbon/react/scss/breakpoint' as *;
 
-.my-challenges {
+.dashboard-responsive {
     width: calc(100% - 72px);
 
     @include breakpoint-down(lg) {
         width: auto;
     }
-    
-    // .my-challenges__table {
-
-    // }
 }
+
+// .my-challenges {
+//     .my-challenges__table {
+
+//     }
+// }

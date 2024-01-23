@@ -22,7 +22,7 @@ export default function SideBar({
                         </Link>
                     </li>
                     <li className="left-sidebar__menu-item">
-                        <Link href="/">
+                        <Link href="/dashboard/in/contributions">
                             <Need />
                             <span>Mes contributions</span>
                         </Link>

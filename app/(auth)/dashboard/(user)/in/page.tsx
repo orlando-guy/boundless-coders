@@ -1,5 +1,4 @@
 import { filteredChallenges } from "@/app/lib/data";
-import { ChallengeTable } from "@/app/ui/Table";
 import TrendChallengeWidget from "@/app/ui/challenges/trend-challenge-widget";
 
 export default async function ChallengeManagerPage() {

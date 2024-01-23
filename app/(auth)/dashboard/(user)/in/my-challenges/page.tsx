@@ -20,7 +20,7 @@ export default async function MyChallengesPage() {
     }
 
     return (
-        <div className="my-challenges">
+        <div className="my-challenges dashboard-responsive">
             <ChallengeTable
                 className="my-challenges__table"
                 dataChallenges={challengesData}

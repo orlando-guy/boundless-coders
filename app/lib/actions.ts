@@ -214,7 +214,7 @@ export async function createChallengeSolution(
         return {
             success: false,
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Érreur lors de la vérification du champ de saisi. Échec de l'enregistrement de la solution"
+            message: "Il semble que la vérification du champ de saisie ait échoué, ce qui a empêché l’enregistrement de la solution."
         }
     }
 
@@ -233,7 +233,7 @@ export async function createChallengeSolution(
         if (isSolutionExists) {
             return {
                 success: false,
-                message: "Cette solution existe déjà ! Veuillez soumettre une nouvelle solution"
+                message: "Il semble que cette solution ait déjà été proposée. Pourriez-vous soumettre une autre solution ?"
             }
         }
 
@@ -263,6 +263,21 @@ export async function createChallengeSolution(
         return {
             success: false,
             message: 'Échec lors de la création de la solution.'
+        }
+    }
+}
+
+export async function deleteSolution(solutionId: string) {
+    try {
+        await prisma.solution.delete({
+            where: {
+                id: solutionId
+            }
+        })
+        revalidatePath('/dashboard/in/contributions')
+    } catch(error) {
+        return {
+            message: "Érreur de la bose de donnée: La Solution n'a pas pu être supprimer."
         }
     }
 }

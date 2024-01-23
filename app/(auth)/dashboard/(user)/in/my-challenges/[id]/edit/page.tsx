@@ -17,7 +17,7 @@ export default async function EditPage({
     }
 
     return (
-        <div className="my-challenges">
+        <div className="dashboard-responsive">
             <EditChallengeForm tags={tags} challenge={challenge} />
         </div>
     )

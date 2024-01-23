@@ -71,3 +71,13 @@ export type ChallengeFields = {
         tagId: string;
     }[];
 }
+
+export type Solution = {
+    id: string;
+    repoUrl: string;
+    createdAt: Date;
+    challenge: {
+        title: string;
+        slug: string;
+    };
+}

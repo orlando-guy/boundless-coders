@@ -11,13 +11,15 @@ import {
     TableRow,
     TableToolbar,
     TableToolbarContent,
+    Link as CarbonLink
 } from "@carbon/react";
-import { challengeWithCountedSolution } from "../lib/definitions";
+import { Solution, challengeWithCountedSolution } from "@/app/lib/definitions";
 import Link from "next/link";
 import { ArchiveChallengeButton, DeleteChallengeButton, UpdateChallengeButton } from "@/app/ui/challenges/buttons";
 import { View } from "@carbon/icons-react";
+import { DeleteSolutionButton } from "./solution/buttons";
 
-export const ChallengeTable = ({
+const ChallengeTable = ({
     dataChallenges,
     className
 }: Readonly<{
@@ -42,7 +44,7 @@ export const ChallengeTable = ({
                     </Link>
                 </TableToolbarContent>
             </TableToolbar>
-            <Table aria-label="sample table">
+            <Table aria-label="challenges table">
                 <TableHead>
                     <TableRow>
                         <TableHeader>Titre</TableHeader>
@@ -83,4 +85,65 @@ export const ChallengeTable = ({
             </Table>
         </TableContainer >
     )
+}
+
+const MySolutionTable = ({
+    solutions,
+    containerClassName
+}: Readonly<{
+    solutions?: Solution[]
+    containerClassName?: string;
+}>) => {
+    return (
+        <TableContainer
+            title="Mes solutions"
+            description="Cette vue à pour but de vous aidé à gérer les solutions que vous publiez."
+            className={`${containerClassName ?? ''} mt-3`}
+        >
+            <Table aria-label="solutions table">
+                <TableHead>
+                    <TableRow>
+                        <TableHeader>Lien du dépot distant</TableHeader>
+                        <TableHeader>Titre du défi</TableHeader>
+                        <TableHeader>Créer le</TableHeader>
+                        <TableHeader>Actions</TableHeader>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {solutions && solutions.map(solution => (
+                        <TableRow key={solution.id}>
+                            <TableCell>
+                                <CarbonLink href={solution.repoUrl} target="_blank">
+                                    {solution.repoUrl}
+                                </CarbonLink>
+                            </TableCell>
+                            <TableCell>{solution.challenge.title}</TableCell>
+                            <TableCell>{solution.createdAt.toLocaleDateString()}</TableCell>
+                            <TableCell>
+                                <div className="flex">
+                                    <Link
+                                        href={`/challenges/${solution.challenge.slug}`}
+                                        passHref
+                                    >
+                                        <Button
+                                            hasIconOnly
+                                            iconDescription="Voir le défi"
+                                            renderIcon={View}
+                                            kind="ghost"
+                                        />
+                                    </Link>
+                                    <DeleteSolutionButton solutionId={solution.id} />
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer >
+    )
+}
+
+export {
+    ChallengeTable,
+    MySolutionTable
 }
