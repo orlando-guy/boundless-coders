@@ -97,6 +97,7 @@ const CreateSolutionModal = ({
                     placeholder="Par exemple https://github.com/orlando-guy/boundless-coders"
                     className="mt-4"
                     name="repoUrl"
+                    required
                     invalid={!!state?.errors?.repoUrl}
                     invalidText={state?.errors?.repoUrl?.join(' ')}
                 />
