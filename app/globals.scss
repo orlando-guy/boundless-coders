@@ -292,6 +292,54 @@ body {
     margin-top: 1.25rem;
 }
 
+.mr-0 {
+    margin-right: 0;
+}
+
+.ml-1 {
+    margin-left: .25rem;
+}
+
+.ml-2 {
+    margin-left: .5rem;
+}
+
+.ml-3 {
+    margin-left: .75rem;
+}
+
+.ml-4 {
+    margin-left: 1rem;
+}
+
+.ml-5 {
+    margin-left: 1.25rem;
+}
+
+.mr-0 {
+    margin-right: 0;
+}
+
+.mr-1 {
+    margin-right: .25rem;
+}
+
+.mr-2 {
+    margin-right: .5rem;
+}
+
+.mr-3 {
+    margin-right: .75rem;
+}
+
+.mr-4 {
+    margin-right: 1rem;
+}
+
+.mr-5 {
+    margin-right: 1.25rem;
+}
+
 .mb-1 {
     margin-bottom: .25rem;
 }
@@ -347,6 +395,10 @@ body {
 
 .text-white-20 {
     color: colors.$gray-30 !important;
+
+    &.cds--link:hover {
+        color: colors.$white-0;
+    }
 }
 
 .text-dark-50 {
