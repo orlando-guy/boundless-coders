@@ -4,6 +4,11 @@ import {
     countChallenges
 } from "@/app/lib/data"
 import ChallengeContentFrames from "@/app/ui/challenge-content-frames"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+    title: 'Challenges'
+}
 
 export default async function ChallengesPage({ searchParams }: Readonly<{
     searchParams?: {

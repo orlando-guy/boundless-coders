@@ -1,8 +1,8 @@
-import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/route";
-import { fetchChallengesByAuthor } from "@/app/lib/data";
-import { challengeWithCountedSolution } from "@/app/lib/definitions";
-import { ChallengeTable } from "@/app/ui/Table";
 import { redirect } from "next/navigation";
+import { ChallengeTable } from "@/app/ui/Table";
+import { challengeWithCountedSolution } from "@/app/lib/definitions";
+import { fetchChallengesByAuthor } from "@/app/lib/data";
+import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/route";
 
 export default async function MyChallengesPage() {
     const session = await getServerAuthSession()
