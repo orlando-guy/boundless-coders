@@ -1,26 +1,27 @@
 'use client'
 
 import { ArrowRight } from "@carbon/icons-react";
-import { ClickableTile, Tag, Theme } from "@carbon/react";
+import { ClickableTile, Tag, Theme, Tile } from "@carbon/react";
 import Link from 'next/link'
 
-export const ClickableWithCustomIcon = (
-    { title, description, href, className, tags }: Readonly<{
+const ClickableWithCustomIcon = (
+    { title, description, href, className, tags, theme }: Readonly<{
         title: string;
         href: string;
         description?: string;
-        className?: string;
         tags?: {
             tag: {
                 title: string;
             }
         }[];
+        className?: string;
+        theme?: "g100" | "white" | "g10" | "g90";
     }>
 ) => {
     description ||= "Officia proident Lorem deserunt ex dolor Lorem ullamco et irure."
     const tileId = title.substring(0, 22).replaceAll(' ', '-')
     return (
-        <Theme theme="g100" className="h-full">
+        <Theme theme={theme ?? "g100"} className="h-full">
             <Link href={href} passHref legacyBehavior className="h-full">
                 <ClickableTile
                     id={tileId}
@@ -51,4 +52,30 @@ export const ClickableWithCustomIcon = (
             </Link>
         </Theme>
     )
+}
+
+const DefaultTile = ({
+    title,
+    description,
+    className
+}: Readonly<{
+    title: string;
+    description?: string;
+    className?: string;
+}>) => {
+    return (
+        <Tile className={`clickable-tile h-full ${className ?? ''}`} id={title.replaceAll(' ', '-')}>
+            <div className="flex flex-col gap-3 mb-3">
+                <h4 className="clickable-tile__heading">{title}</h4>
+                {description && (
+                    <p className="clickable-tile__body">{description}</p>
+                )}
+            </div>
+        </Tile>
+    )
+}
+
+export {
+    ClickableWithCustomIcon,
+    DefaultTile
 }

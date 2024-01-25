@@ -65,7 +65,7 @@ const Footer = () => {
                                     </CarbonLink>
                                 </li>
                                 <li>
-                                    <CarbonLink 
+                                    <CarbonLink
                                         href="https://github.com/orlando-guy"
                                         className="text-white-20"
                                         target="_blank"
