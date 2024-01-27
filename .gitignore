@@ -38,3 +38,6 @@ next-env.d.ts
 
 #prisma
 /prisma/migrations/20*
+
+#extra dir
+/data
