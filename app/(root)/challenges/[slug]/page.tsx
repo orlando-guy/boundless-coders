@@ -1,4 +1,3 @@
-import { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getServerAuthSession } from '@/app/api/auth/[...nextauth]/route'
 import { countChallengeSolutions, fetchChallengeBySlug } from '@/app/lib/data'
@@ -12,7 +11,7 @@ type Props = {
 }
 
 export async function generateMetadata(
-    { params, searchParams }: Props,
+    { params }: Props,
 ) {
     // read route params
     const slug = decodeURIComponent(params.slug)
