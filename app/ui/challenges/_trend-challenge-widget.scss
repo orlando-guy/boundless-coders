@@ -1,0 +1,59 @@
+@use '@carbon/react/scss/breakpoint' as *;
+
+.td-challenges-widget {
+    max-height: 368px;
+    background-color: #262626;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .1);
+    overflow: hidden;
+
+    @include breakpoint-down(lg) {
+        width: auto;
+    }
+
+    .td-challenges-widget__title {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        height: 2.625rem;
+        padding: 0 1rem;
+
+        h3 {
+            color: #f4f4f4;
+            font-size: .875rem;
+            font-weight: 600;
+
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    .td-challenges-widget__body {
+        height: calc(100% - 2.625rem);
+        overflow: visible;
+        padding: 0 1rem 1rem;
+
+        .td-challenges-widget__body-items {
+            display: flex;
+            padding-top: .5rem;
+            height: 100%;
+            width: 100%;
+
+            .td-challenges-widget__item {
+                margin-right: .75rem;
+                // background-color: #343434;
+
+                &.item--intro {
+                    background-image: linear-gradient(134deg, #0540c8 0%, #8a3ffc 100%);
+                }
+            }
+        }
+    }
+}
+
+.td-challenges-widget + div.cds--data-table-container {
+    width: calc(100% - 84px);
+
+    @include breakpoint-down(lg) {
+        width: auto;
+    }
+}

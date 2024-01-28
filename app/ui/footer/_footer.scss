@@ -1,7 +1,9 @@
 @use '@carbon/react/scss/breakpoint' as *;
 
 footer {
+    position: relative;
     padding: 1rem 0;
+    z-index: 102;
 
     .footer__logo {
         color: var(--cds-text-primary, #161616);
@@ -14,9 +16,6 @@ footer {
         padding: 0 1rem 0 .5rem;
         border: 0.125rem solid transparent;
         block-size: 100%;
-        font-weight: 600;
-        letter-spacing: 0.1px;
-        line-height: 1.25rem;
         outline: none;
         text-decoration: none;
         -webkit-user-select: none;

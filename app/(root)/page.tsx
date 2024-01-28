@@ -91,16 +91,64 @@ export default function Home() {
                                 </Grid>
                             </TabPanel>
                             <TabPanel>
-                                <Grid className="tabs-group-content">
-                                    <Column lg={16} md={8} sm={4} className="landing-page__tab-content">
-                                        Aucun défis pour l'instant, soyez un peu patient. Merci!
+                                <Grid className="tabs-group-content gap-2">
+                                    <Column md={4} lg={7} sm={4} className="landing-page__tab-content">
+                                        <h2 className="landing-page__subheading">D'où proviennent les défis ?</h2>
+                                        <p className="landing-page__p">
+                                            Les défis sont proposés par des développeurs chevronnés inspirés de leur parcours,
+                                            c'est-à-dire des situations qu'ils ont vécues en entreprise ou tirées de leurs propres expériences.
+                                            Cela vous permet d'apprendre plus rapidement et facilement ce qu'ils ont mis du temps et des efforts à découvrir. <br />
+                                            Les défis sont conçus pour vous aider à acquérir des compétences pratiques et à relever des défis réels,
+                                            tout en vous offrant une expérience d'apprentissage amusante et stimulante.
+                                            En outre, les développeurs chevronnés qui proposent ces défis sont souvent des experts dans leur domaine,
+                                            ce qui signifie que vous pouvez apprendre des meilleures pratiques et des astuces de professionnels.
+                                            En somme, ces sont un excellent moyen d'améliorer vos compétences et de vous préparer à relever des défis
+                                            plus complexes dans le futur.
+                                        </p>
+                                        <div className="flex flex-wrap gap-3">
+                                            <Link href="/challenges" passHref>
+                                                <Button
+                                                    renderIcon={ArrowRight}
+                                                    iconDescription="Right arrow to redirect user to another page"
+                                                >Relevez votre premier défi</Button>
+                                            </Link>
+                                        </div>
+                                    </Column>
+                                    <Column md={4} lg={{ span: 8, offset: 7 }} sm={4}>
+                                        <Image
+                                            className='max-w-full tabs-group__image'
+                                            src="/images/learning-env.jpg"
+                                            alt="An illustration of experienced fullstack developers teaching juniors"
+                                            width={786}
+                                            height={647}
+                                        />
                                     </Column>
                                 </Grid>
                             </TabPanel>
                             <TabPanel>
-                                <Grid className="tabs-group-content">
-                                    <Column lg={16} md={8} sm={4} className="landing-page__tab-content">
-                                        Aucune contribution pour l'instant. Merci d'être un peu patient.
+                                <Grid className="tabs-group-content gap-2">
+                                    <Column md={4} lg={7} sm={4} className="landing-page__tab-content">
+                                        <h2 className="landing-page__subheading">Contributions</h2>
+                                        <p className="landing-page__p">
+                                            Êtes-vous coincez sur un projet ?
+                                            Êtes-vous à la recherche de projets concrets sur lesquelles mettre en pratiques vos connaissances ?
+                                            <br />
+                                            Si la réponse à l'une de ces questions est <strong>Oui</strong>, alors bienvenu car sur <strong>BOUNDLESS CODERS </strong>
+                                            vous pourrez poster vos problèmes (pull requests) et recevoir l'aide de vos camarades développeurs.
+                                            Vous pourrez ainsi avancer aisément tout en gagnant un temps précieux et de nouveaux collaborateurs. <br />
+                                            En outre, BOUNDLESS CODERS vous offre la possibilité de contribuer à d'autres projets, ce qui renforcera vos
+                                            connaissances et vous permettra d'intégrer les meilleures équipes de développement.
+                                        </p>
+
+                                    </Column>
+                                    <Column md={4} lg={{ span: 8, offset: 7 }} sm={4}>
+                                        <Image
+                                            className='max-w-full tabs-group__image'
+                                            src="/images/contributions.jpg"
+                                            alt="An illustration of experienced fullstack developers contributing on others developers project"
+                                            width={786}
+                                            height={647}
+                                        />
                                     </Column>
                                 </Grid>
                             </TabPanel>

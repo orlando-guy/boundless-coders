@@ -1,5 +1,7 @@
 import { remark } from "remark";
-import html from 'remark-html'
+import html from 'remark-html';
+// import path from 'path'
+// import fs from 'fs'
 
 // Take in a phrase and separate the third word in an array
 export function createArrayFromPhrase(phrase: string) {
@@ -38,3 +40,10 @@ export function translator(word: string): string {
     // Check if the word exists in WORDS, otherwise return the original word
     return WORDS[word] || word;
 }
+
+// export function getDataFromMdFile(fileName: string, currentDir?: string) {
+//     const challengeDir = path.join(process.cwd(), currentDir ?? 'data')
+//     const fullPath = path.join(challengeDir, fileName)
+
+//     return fs.readFileSync(fullPath, 'utf-8')
+// }

@@ -1,13 +1,13 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.scss'
-import { Providers } from '@/app/ui/providers'
-
-const inter = Inter({ subsets: ['latin'] })
+import '@/app/globals.scss'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'BOUNDLESS CODERS',
+  title: {
+    template: '%s | BOUNDLESS CODERS',
+    default: 'BOUNDLESS CODERS'
+  },
   description: "BOUNDLESS CODERS est un projet open source dont le but est de vous aider à devenir un meilleur ingénieur logiciel et à trouver un travail sympa grâce à des défis de codage, et des contributions sur des projets d'autres développeurs.",
+  creator: 'Orlando Guichard',
 }
 
 export default function RootLayout({
@@ -17,8 +17,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body >
-        <Providers>{children}</Providers>
+      <body>
+        {children}
       </body>
     </html>
   )

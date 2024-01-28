@@ -3,9 +3,11 @@
 import { Column, Grid, Tag } from '@carbon/react'
 import { $Enums } from '@prisma/client';
 import { translator } from '../lib/utils';
+import { ModalStateManager } from './solution/create-solution-modal';
 
 const ChallengeDetail = (
-    { content, level, tags }: Readonly<{
+    { content, level, tags, challengeId, overallSolution, isAuthUser = false }: Readonly<{
+        challengeId: string;
         content: string;
         level: $Enums.Level;
         tags: {
@@ -13,6 +15,13 @@ const ChallengeDetail = (
                 title: string;
             };
         }[];
+        overallSolution: number;
+        /***
+         * checks if the user is authenticated
+         * 
+         * @default false
+         */
+        isAuthUser?: boolean;
     }>) => {
     return (
         <Grid className='py-6 challenge-detail'>
@@ -34,7 +43,16 @@ const ChallengeDetail = (
                         ))}
                     </ul>
                 </div>
-                <p className='mt-2'>Ce défi est de niveau: <Tag>{translator(level)}</Tag></p>
+                <div className="flex flex-col gap-3">
+                    <div className='flex items-center gap-2 mt-2'>
+                        <span>Ce défi est de niveau: </span>
+                        <Tag>{translator(level)}</Tag>
+                    </div>
+                    {isAuthUser && <ModalStateManager challengeId={challengeId} />}
+                    {(isAuthUser && overallSolution > 0) && (<p>
+                        <span>{overallSolution}</span> {`solution${overallSolution > 1 ? 's' : ''} disponible${overallSolution > 1 ? 's' : ''} pour ce défi`}
+                    </p>)}
+                </div>
             </Column>
         </Grid>
     )
