@@ -297,3 +297,73 @@ export async function fetchSolutionsByAuthorId(authorId: string) {
         throw new Error('Failed to fetch Solutions by his Author.')
     }
 }
+
+/* Projects */
+
+export async function fetchProjectsWithTags() {
+    noStore()
+    try {
+        const projects = await prisma.project.findMany({
+            select: {
+                id: true,
+                title: true,
+                solved: true,
+                issueUrl: true,
+                solutionUrl: true,
+                resolvedBy: true,
+                resolverImage: true,
+                description: true,
+                user: {
+                    select: {
+                        name: true,
+                        image: true,
+                    }
+                },
+                tags: {
+                    select: {
+                        tag: {
+                            select: {
+                                title: true,
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
+        return projects
+    } catch (error) {
+        console.error('Database error:', error)
+        throw new Error('Failed to fetched projects data.')
+    }
+}
+
+export async function fetchProjectsTags() {
+    noStore()
+    try {
+        const tags = await prisma.tag.findMany({
+            include: {
+                _count: {
+                    select: { projects: true }
+                }
+            }
+        })
+        return tags
+    } catch (error) {
+        console.error('Database error', error)
+        throw new Error('Failed to fetch projects tags data.')
+    }
+}
+
+export async function countProjects() {
+    noStore()
+    try {
+        const totalItems = await prisma.project.count({})
+        return totalItems
+    } catch (error) {
+        console.error('Database error', error)
+        throw new Error('Failed to count projects data.')
+    }
+}

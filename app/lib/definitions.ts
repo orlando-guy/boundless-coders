@@ -81,3 +81,38 @@ export type Solution = {
         slug: string;
     };
 }
+
+/* Types related to Projects Or Contributions */
+
+export type ProjectWithTags = {
+    id: string;
+    title: string;
+    issueUrl: string;
+    description: string;
+    solved: boolean;
+    resolvedBy: string | null;
+    resolverImage: string | null;
+    solutionUrl: string | null;
+    user: {
+        name: string | null;
+        image: string | null;
+    };
+    tags: {
+        tag: {
+            title: string;
+        }
+    }[];
+}
+
+export type TagUsedByProjects = ({
+    _count: {
+        projects: number;
+    };
+} & {
+    id: string;
+    title: string;
+    adminId: string;
+    archived: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+})
