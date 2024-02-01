@@ -118,12 +118,14 @@ model Solution {
 model Project {
   id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title         String           @db.VarChar(255)
-  repoUrl       String           @db.VarChar(255)
+  issueUrl      String           @unique @db.VarChar(255)
   description   String
   solved        Boolean          @default(false)
   archived      Boolean          @default(false)
   publiched     Boolean          @default(false)
   resolvedBy    String?
+  resolverImage String?
+  solutionUrl   String?          @unique @db.VarChar(255)
   user          User             @relation(fields: [userId], references: [id])
   userId        String           @db.Uuid
   createdAt     DateTime         @default(now())
