@@ -1,8 +1,33 @@
 'use client'
 
-import { ArrowRight } from "@carbon/icons-react";
-import { ClickableTile, Tag, Theme, Tile } from "@carbon/react";
+import { ArrowRight, UserAvatar, Need, View } from "@carbon/icons-react";
+import { Tags } from "@carbon/pictograms-react";
+import { ClickableTile, ExpandableTile, Tag, Theme, Tile, TileAboveTheFoldContent, TileBelowTheFoldContent, Button } from "@carbon/react";
+import Image from "next/image";
 import Link from 'next/link'
+
+export interface ProjectTileProps {
+    data: {
+        authorName: string;
+        authorPicture?: string;
+        className?: string;
+        description: string;
+        id: number;
+        issueUrl: string;
+        resolvedBy?: string;
+        resolverPicture?: string;
+        solutionUrl?: string;
+        solved: boolean;
+        tags: {
+            tag: {
+                title: string;
+            };
+        }[];
+        theme?: "g100" | "white" | "g10" | "g90";
+        title: string;
+    };
+    index: number;
+}
 
 const ClickableWithCustomIcon = (
     { title, description, href, className, tags, theme }: Readonly<{
@@ -75,7 +100,101 @@ const DefaultTile = ({
     )
 }
 
+
+const ProjectTile = ({
+    data,
+    index
+}: Readonly<ProjectTileProps>) => {
+    const theme = data?.theme ?? 'white'
+    return (
+        <Theme theme={theme}>
+            <ExpandableTile className="project-card">
+                <TileAboveTheFoldContent>
+                    <div className="flex flex-col gap-4 project-card__above-container">
+                        <ul className="list-unstyle flex justify-between above-container__tiers">
+                            <li>
+                                <div className="flex flex-col gap-2">
+                                    <small>Aide demandée: </small>
+                                    <div className="flex items-center gap-2">
+                                        <div className="user-profile-image">
+                                            {data?.authorPicture ? (
+                                                <Image
+                                                    src={data.authorPicture}
+                                                    width={56}
+                                                    height={56}
+                                                    alt='user profile picture'
+                                                />
+                                            ) : (
+                                                <UserAvatar size={25} />
+                                            )}
+                                        </div>
+                                        <small>{data.authorName}</small>
+                                    </div>
+                                </div>
+                            </li>
+                            {data.solved && (<li>
+                                <div className="flex flex-col gap-2">
+                                    <small>Aidé par: </small>
+                                    <div className="flex items-center gap-2">
+                                        <div className="user-profile-image">
+                                            {data.resolverPicture ? (
+                                                <Image
+                                                    src={data.resolverPicture}
+                                                    width={56}
+                                                    height={56}
+                                                    alt='user profile picture'
+                                                />
+                                            ) : (
+                                                <UserAvatar size={25} />
+                                            )}
+                                        </div>
+                                        <small>{data?.resolvedBy}</small>
+                                    </div>
+                                </div>
+                            </li>)}
+                        </ul>
+
+                        <h4>{data.title}</h4>
+
+                        <div className="flex gap-2">
+                            {data.tags.map(item => (
+                                <Tag type="gray">{item.tag.title}</Tag>
+                            ))}
+                        </div>
+
+                        {data.solved ? (
+                            <Button
+                                className="mt-3 mb-7"
+                                href={data?.solutionUrl}
+                                renderIcon={View}
+                                iconDescription="Contribuez à ce projet"
+                                kind="tertiary"
+                            >Voir la solution</Button>
+                        ) : (
+                            <Button
+                                className="mt-3 mb-7"
+                                href={data.issueUrl}
+                                renderIcon={Need}
+                                iconDescription="Contribuez à ce projet"
+                                kind="tertiary"
+                            >Contribuez</Button>
+                        )}
+                    </div>
+                </TileAboveTheFoldContent>
+                <TileBelowTheFoldContent>
+                    <div className="w-full py-3">
+                        <p>
+                            {data.description}
+                        </p>
+                    </div>
+                </TileBelowTheFoldContent>
+            </ExpandableTile>
+        </Theme>
+    )
+}
+
 export {
     ClickableWithCustomIcon,
-    DefaultTile
+    DefaultTile,
+    ProjectTile
 }
