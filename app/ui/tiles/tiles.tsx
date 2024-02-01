@@ -1,22 +1,22 @@
 'use client'
 
+import React from 'react';
 import { ArrowRight, UserAvatar, Need, View } from "@carbon/icons-react";
 import { Tags } from "@carbon/pictograms-react";
 import { ClickableTile, ExpandableTile, Tag, Theme, Tile, TileAboveTheFoldContent, TileBelowTheFoldContent, Button } from "@carbon/react";
 import Image from "next/image";
 import Link from 'next/link'
+import { mdToHTML } from '@/app/lib/utils';
 
 export interface ProjectTileProps {
     data: {
-        authorName: string;
-        authorPicture?: string;
         className?: string;
         description: string;
-        id: number;
+        id: string;
         issueUrl: string;
-        resolvedBy?: string;
-        resolverPicture?: string;
-        solutionUrl?: string;
+        resolvedBy: string | null;
+        resolverImage: string | null;
+        solutionUrl: string | null;
         solved: boolean;
         tags: {
             tag: {
@@ -25,6 +25,10 @@ export interface ProjectTileProps {
         }[];
         theme?: "g100" | "white" | "g10" | "g90";
         title: string;
+        user: {
+            name: string | null;
+            image: string | null;
+        };
     };
     index: number;
 }
@@ -34,7 +38,7 @@ const ClickableWithCustomIcon = (
         title: string;
         href: string;
         description?: string;
-        tags?: {
+        tags: {
             tag: {
                 title: string;
             }
@@ -105,7 +109,12 @@ const ProjectTile = ({
     data,
     index
 }: Readonly<ProjectTileProps>) => {
+    const [parsedDescription, setParsedDescription] = React.useState<string | null>(null)
     const theme = data?.theme ?? 'white'
+    React.useEffect(() => {
+        mdToHTML(data.description)
+            .then(parsedContent => setParsedDescription(parsedContent))
+    }, [])
     return (
         <Theme theme={theme}>
             <ExpandableTile className="project-card">
@@ -117,9 +126,9 @@ const ProjectTile = ({
                                     <small>Aide demandée: </small>
                                     <div className="flex items-center gap-2">
                                         <div className="user-profile-image">
-                                            {data?.authorPicture ? (
+                                            {data.user?.image ? (
                                                 <Image
-                                                    src={data.authorPicture}
+                                                    src={data.user.image}
                                                     width={56}
                                                     height={56}
                                                     alt='user profile picture'
@@ -128,7 +137,7 @@ const ProjectTile = ({
                                                 <UserAvatar size={25} />
                                             )}
                                         </div>
-                                        <small>{data.authorName}</small>
+                                        <small>{data.user?.name}</small>
                                     </div>
                                 </div>
                             </li>
@@ -137,9 +146,9 @@ const ProjectTile = ({
                                     <small>Aidé par: </small>
                                     <div className="flex items-center gap-2">
                                         <div className="user-profile-image">
-                                            {data.resolverPicture ? (
+                                            {data.resolverImage ? (
                                                 <Image
-                                                    src={data.resolverPicture}
+                                                    src={data.resolverImage}
                                                     width={56}
                                                     height={56}
                                                     alt='user profile picture'
@@ -165,7 +174,7 @@ const ProjectTile = ({
                         {data.solved ? (
                             <Button
                                 className="mt-3 mb-7"
-                                href={data?.solutionUrl}
+                                href={data.solutionUrl || undefined}
                                 renderIcon={View}
                                 iconDescription="Contribuez à ce projet"
                                 kind="tertiary"
@@ -182,11 +191,14 @@ const ProjectTile = ({
                     </div>
                 </TileAboveTheFoldContent>
                 <TileBelowTheFoldContent>
-                    <div className="w-full py-3">
-                        <p>
-                            {data.description}
-                        </p>
-                    </div>
+                    {parsedDescription && (
+                        <div className='project-detail'>
+                            <article
+                                className="markdown-body w-full py-3"
+                                dangerouslySetInnerHTML={{ __html: parsedDescription }}
+                            />
+                        </div>
+                    )}
                 </TileBelowTheFoldContent>
             </ExpandableTile>
         </Theme>
