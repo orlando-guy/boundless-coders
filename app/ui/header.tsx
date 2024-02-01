@@ -34,16 +34,16 @@ const HeaderNavbar = ({
                         aria-expanded={isSideNavExpanded}
                     />
                     <Link href='/' passHref legacyBehavior>
-                        <HeaderName href='/' prefix=' '>
+                        <HeaderName prefix=' '>
                             BOUNDLESS CODERS
                         </HeaderName>
                     </Link>
                     <HeaderNavigation aria-label='Carbon header'>
-                        <Link href="/repos" passHref legacyBehavior>
-                            <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
+                        <Link href="/contributions" passHref legacyBehavior>
+                            <HeaderMenuItem>Les contributions</HeaderMenuItem>
                         </Link>
                         <Link href="/challenges" passHref legacyBehavior>
-                            <HeaderMenuItem href="/challenges">Les défis de codage</HeaderMenuItem>
+                            <HeaderMenuItem>Les défis de codage</HeaderMenuItem>
                         </Link>
                     </HeaderNavigation>
                     <SideNav
