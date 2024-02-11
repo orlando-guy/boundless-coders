@@ -300,6 +300,44 @@ export async function fetchSolutionsByAuthorId(authorId: string) {
 
 /* Projects */
 
+export async function fetchProjectByAuthorId(authorId: string) {
+    noStore()
+
+    try {
+        const projects = await prisma.project.findMany({
+            where: {
+                userId: authorId
+            },
+            select: {
+                id: true,
+                title: true,
+                solved: true,
+                issueUrl: true,
+                solutionUrl: true,
+                resolvedBy: true,
+                resolverImage: true,
+                description: true,
+                createdAt: true,
+                contributions: {
+                    select: {
+                        contributor: {
+                            select: {
+                                id: true,
+                                name: true,
+                                image: true
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        return projects
+    } catch (error) {
+        console.error('Database error:', error)
+        throw new Error('Failed to fetched projects data.')
+    }
+}
+
 export async function fetchProjectsWithTags() {
     noStore()
     try {
@@ -313,6 +351,7 @@ export async function fetchProjectsWithTags() {
                 resolvedBy: true,
                 resolverImage: true,
                 description: true,
+                createdAt: true,
                 user: {
                     select: {
                         name: true,
@@ -365,5 +404,58 @@ export async function countProjects() {
     } catch (error) {
         console.error('Database error', error)
         throw new Error('Failed to count projects data.')
+    }
+}
+
+export async function fetchProjectById(projectId: string) {
+    noStore()
+    try{
+        const project = await prisma.project.findUnique({
+            where: {
+                id: projectId
+            },
+            select: {
+                id: true,
+                title: true,
+                solved: true,
+                issueUrl: true,
+                solutionUrl: true,
+                resolvedBy: true,
+                resolverImage: true,
+                description: true,
+                createdAt: true,
+            }
+        })
+        return project
+    }catch(error) {
+        console.error('Database error', error)
+        throw new Error("Failed to fetch project data.")
+    }
+}
+
+export async function fetchContributorsByProjectId(projectId: string) {
+    noStore()
+
+    try {
+        const contributors = await prisma.contribution.findMany({
+            where: {
+                project: {
+                    id: projectId
+                },
+            },
+            select: {
+                contributor: {
+                    select: {
+                        id: true,
+                        name: true,
+                        image: true
+                    }
+                }
+            }
+        })
+        return contributors
+    } catch(error) {
+        console.error('Database error', error)
+        throw new Error("Failed to fetch contributor data.")
     }
 }

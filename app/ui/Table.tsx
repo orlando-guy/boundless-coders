@@ -1,5 +1,6 @@
 'use client'
 
+import Link from "next/link";
 import {
     Button,
     Table,
@@ -13,11 +14,14 @@ import {
     TableToolbarContent,
     Link as CarbonLink
 } from "@carbon/react";
-import { Solution, challengeWithCountedSolution } from "@/app/lib/definitions";
-import Link from "next/link";
+import { CheckmarkOutline, View } from "@carbon/icons-react";
+import {  ProjectWithContributors, Solution, challengeWithCountedSolution } from "@/app/lib/definitions";
 import { ArchiveChallengeButton, DeleteChallengeButton, UpdateChallengeButton } from "@/app/ui/challenges/buttons";
-import { View } from "@carbon/icons-react";
-import { DeleteSolutionButton } from "./solution/buttons";
+import { DeleteSolutionButton } from "@/app/ui/solution/buttons";
+import { DeleteProjectButton, UpdateProjectButton } from "@/app/ui/projects/buttons"
+import { useToggle } from "@/app/lib/hooks";
+import UpdateProjectStatusModal from "./projects/update-status-modal";
+import { useState } from "react";
 
 const ChallengeTable = ({
     dataChallenges,
@@ -143,7 +147,94 @@ const MySolutionTable = ({
     )
 }
 
+const MyProjectsTable = ({
+    projects,
+    containerClassName
+}: Readonly<{
+    projects?: ProjectWithContributors[]
+    containerClassName?: string;
+}>) => {
+
+    const [open, setOpenOrClose] = useToggle(false)
+    const [currentProjectContributors, setCurrentProjectContributors] = useState<ProjectWithContributors | undefined>()
+
+    const handleCloseModal = () => {
+        setCurrentProjectContributors(undefined)
+        setOpenOrClose()
+    }
+
+    return (
+        <>
+            <TableContainer
+                title="Mes projets"
+                description="Cette vue à pour but de vous aidé à gérer les projets que vous publiez."
+                className={`${containerClassName ?? ''} mt-3`}
+            >
+                <TableToolbar>
+                    <TableToolbarContent aria-hidden={false}>
+                        <Link href="/dashboard/in/projects/create" passHref>
+                            <Button
+                                tabIndex={-1}
+                                kind="primary"
+                            >
+                                Ajouter un projet
+                            </Button>
+                        </Link>
+                    </TableToolbarContent>
+                </TableToolbar>
+                <Table aria-label="projects table">
+                    <TableHead>
+                        <TableRow>
+                            <TableHeader>Titre</TableHeader>
+                            <TableHeader>lien du problème</TableHeader>
+                            <TableHeader>statut</TableHeader>
+                            <TableHeader>Créer le</TableHeader>
+                            <TableHeader>Actions</TableHeader>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {projects?.map(project => (
+                            <TableRow key={project.id}>
+                                <TableCell>{project.title}</TableCell>
+                                <TableCell>
+                                    <CarbonLink href={project.issueUrl} target="_blank">
+                                        {project.issueUrl}
+                                    </CarbonLink>
+                                </TableCell>
+                                <TableCell>{project.solved ? 'résolu' : 'non résolu'}</TableCell>
+                                <TableCell>{project.createdAt.toLocaleDateString()}</TableCell>
+                                <TableCell>
+                                    <div className="flex">
+                                        <UpdateProjectButton projectId={project.id} />
+                                        <DeleteProjectButton projectId={project.id} />
+                                        { !project.solved && (<Button
+                                            hasIconOnly
+                                            iconDescription='Clôturer'
+                                            onClick={() => {
+                                                setCurrentProjectContributors(project)
+                                                setOpenOrClose()
+                                            }}
+                                            renderIcon={CheckmarkOutline}
+                                            kind='ghost'
+                                        />)}
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer >
+            {(currentProjectContributors && open) && <UpdateProjectStatusModal
+                isOpen={open}
+                onClose={handleCloseModal}
+                project={currentProjectContributors}
+            />}
+        </>
+    )
+}
+
 export {
     ChallengeTable,
+    MyProjectsTable,
     MySolutionTable
 }

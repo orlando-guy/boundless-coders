@@ -67,6 +67,16 @@ const HeaderNavbar = ({
                                                     Tableau de bord
                                                 </HeaderMenuItem>
                                             </Link>
+                                            <Link href="/dashboard/in/contributions" passHref legacyBehavior>
+                                                <HeaderMenuItem>
+                                                    Mes contributions
+                                                </HeaderMenuItem>
+                                            </Link>
+                                            <Link href="/dashboard/in/projects" passHref legacyBehavior>
+                                                <HeaderMenuItem>
+                                                    Mes projets
+                                                </HeaderMenuItem>
+                                            </Link>
                                             <Link href="/dashboard/in/my-challenges" passHref legacyBehavior>
                                                 <HeaderMenuItem>
                                                     Mes challenges
