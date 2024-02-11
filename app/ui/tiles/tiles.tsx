@@ -111,10 +111,13 @@ const ProjectTile = ({
 }: Readonly<ProjectTileProps>) => {
     const [parsedDescription, setParsedDescription] = React.useState<string | null>(null)
     const theme = data?.theme ?? 'white'
+    const theAuthorIsTheResolver = data.resolvedBy === data.user?.name
+
     React.useEffect(() => {
         mdToHTML(data.description)
             .then(parsedContent => setParsedDescription(parsedContent))
-    }, [])
+    }, [data.description])
+
     return (
         <Theme theme={theme}>
             <ExpandableTile className="project-card">
@@ -141,7 +144,9 @@ const ProjectTile = ({
                                     </div>
                                 </div>
                             </li>
-                            {data.solved && (<li>
+                            
+                            {(data.solved && !theAuthorIsTheResolver) 
+                                && (<li>
                                 <div className="flex flex-col gap-2">
                                     <small>Aidé par: </small>
                                     <div className="flex items-center gap-2">
@@ -167,7 +172,10 @@ const ProjectTile = ({
 
                         <div className="flex gap-2">
                             {data.tags.map(item => (
-                                <Tag type="gray">{item.tag.title}</Tag>
+                                <Tag
+                                    key={ item.tag.title.replace(' ', '-') }
+                                    type="gray"
+                                >{item.tag.title}</Tag>
                             ))}
                         </div>
 
