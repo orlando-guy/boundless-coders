@@ -1,5 +1,5 @@
 import { countProjects, fetchProjectsTags, fetchProjectsWithTags } from '@/app/lib/data';
-import { ProjectContentFrames } from '@/app/ui/contributions/project-content-frames';
+import { ProjectContentFrames } from '@/app/ui/projects/project-content-frames';
 
 export default async function Repository() {
     const projects = await fetchProjectsWithTags()
