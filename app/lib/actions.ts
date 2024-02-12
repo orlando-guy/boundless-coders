@@ -356,6 +356,22 @@ export async function createProject(
     const { title, description, issueUrl, tags } = validatedFields.data
 
     try {
+        // check if the project exists already
+        const itExistsAlready = await prisma.project.findFirst({
+            where: {
+                issueUrl,
+            },
+            select: {
+                id: true
+            }
+        })
+
+        if (itExistsAlready) {
+            return {
+                message: "Ce projet existe déjà"
+            }
+        }
+
         await prisma.project.create({
             data: {
                 title,
