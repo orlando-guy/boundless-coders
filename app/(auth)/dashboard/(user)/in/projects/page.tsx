@@ -1,22 +1,34 @@
 import React from "react"
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/route"
-import { fetchProjectByAuthorId } from "@/app/lib/data"
+import { fetchPaginatedProjectsByAuthorId } from "@/app/lib/data"
 import { MyProjectsTable } from "@/app/ui/Table"
 
-export default async function MyContributionPage() {
+export default async function MyContributionPage({
+    searchParams
+}: Readonly<{
+    searchParams?: {
+        page?: string;
+    }
+}> ) {
     const session = await getServerAuthSession()
-    let projects
+    const curentPage = searchParams?.page ? Number(searchParams.page) : 1
+    let projectData
+    let totalItems = 0
+    
 
     if (session) {
-        projects = await fetchProjectByAuthorId(session.user.id)
+        const {projectTotal, projects} = await fetchPaginatedProjectsByAuthorId(session.user.id, curentPage)
+        projectData = projects
+        totalItems = projectTotal
     }
 
     return (
         <div className="dashboard-responsive">
             <h1>Mes projets</h1>
             <MyProjectsTable
-                projects={projects}
+                projects={projectData}
                 containerClassName="mt-4"
+                totalProjects={totalItems}
             />
         </div>
     )

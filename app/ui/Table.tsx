@@ -15,13 +15,14 @@ import {
     Link as CarbonLink
 } from "@carbon/react";
 import { CheckmarkOutline, View } from "@carbon/icons-react";
-import {  ProjectWithContributors, Solution, challengeWithCountedSolution } from "@/app/lib/definitions";
+import { ProjectWithContributors, Solution, challengeWithCountedSolution } from "@/app/lib/definitions";
 import { ArchiveChallengeButton, DeleteChallengeButton, UpdateChallengeButton } from "@/app/ui/challenges/buttons";
 import { DeleteSolutionButton } from "@/app/ui/solution/buttons";
 import { DeleteProjectButton, UpdateProjectButton } from "@/app/ui/projects/buttons"
 import { useToggle } from "@/app/lib/hooks";
 import UpdateProjectStatusModal from "./projects/update-status-modal";
 import { useState } from "react";
+import Pagination from "./pagination";
 
 const ChallengeTable = ({
     dataChallenges,
@@ -148,11 +149,13 @@ const MySolutionTable = ({
 }
 
 const MyProjectsTable = ({
+    containerClassName,
     projects,
-    containerClassName
+    totalProjects
 }: Readonly<{
-    projects?: ProjectWithContributors[]
     containerClassName?: string;
+    projects?: ProjectWithContributors[];
+    totalProjects?: number;
 }>) => {
 
     const [open, setOpenOrClose] = useToggle(false)
@@ -207,7 +210,7 @@ const MyProjectsTable = ({
                                     <div className="flex">
                                         <UpdateProjectButton projectId={project.id} />
                                         <DeleteProjectButton projectId={project.id} />
-                                        { !project.solved && (<Button
+                                        {!project.solved && (<Button
                                             hasIconOnly
                                             iconDescription='Clôturer'
                                             onClick={() => {
@@ -223,7 +226,10 @@ const MyProjectsTable = ({
                         ))}
                     </TableBody>
                 </Table>
-            </TableContainer >
+            </TableContainer>
+            {totalProjects && (<Pagination
+                totalItems={totalProjects}
+            />)}
             {(currentProjectContributors && open) && <UpdateProjectStatusModal
                 isOpen={open}
                 onClose={handleCloseModal}

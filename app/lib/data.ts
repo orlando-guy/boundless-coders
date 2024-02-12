@@ -1,6 +1,6 @@
-import prisma from '@/app/lib/db'
 import { unstable_noStore as noStore } from 'next/cache'
-import { ChallengesWithTags } from './definitions';
+import prisma from '@/app/lib/db'
+import { ChallengesWithTags, ProjectWithTags } from '@/app/lib/definitions';
 
 export async function fetchChallengesWithTags() {
     noStore()
@@ -300,11 +300,30 @@ export async function fetchSolutionsByAuthorId(authorId: string) {
 
 /* Projects */
 
-export async function fetchProjectByAuthorId(authorId: string) {
+/**
+ * It fetch information about projects associated with a specific user, including their details and contributors.
+ * 
+ * @param {string} authorId represents the ID of the Author
+ * @param {number} currentPage
+ * @param {number | undefined} quantity represents the number of elements to recover, it's by default 10
+ * 
+ */
+export async function fetchPaginatedProjectsByAuthorId(authorId: string, currentPage: number, quantity?: number) {
     noStore()
+    quantity ||= 10
+    const offset = 10 * (currentPage - 1)
 
     try {
+        const projectTotal = await prisma.project.count({
+            where: {
+                user: {
+                    id: authorId
+                }
+            }
+        })
         const projects = await prisma.project.findMany({
+            skip: offset,
+            take: quantity,
             where: {
                 userId: authorId
             },
@@ -331,47 +350,110 @@ export async function fetchProjectByAuthorId(authorId: string) {
                 }
             }
         })
-        return projects
+        return { projectTotal, projects }
     } catch (error) {
         console.error('Database error:', error)
         throw new Error('Failed to fetched projects data.')
     }
 }
 
-export async function fetchProjectsWithTags() {
+export async function filterProjectByTagAndPage(currentPage: number, tag: string, quantity?: number) {
     noStore()
+    quantity ||= 10
+    const offset = quantity * (currentPage - 1)
+    let projects: ProjectWithTags[]
+
     try {
-        const projects = await prisma.project.findMany({
-            select: {
-                id: true,
-                title: true,
-                solved: true,
-                issueUrl: true,
-                solutionUrl: true,
-                resolvedBy: true,
-                resolverImage: true,
-                description: true,
-                createdAt: true,
-                user: {
-                    select: {
-                        name: true,
-                        image: true,
-                    }
-                },
-                tags: {
-                    select: {
-                        tag: {
-                            select: {
-                                title: true,
+        if (tag !== '') {
+            projects = await prisma.project.findMany({
+                skip: offset,
+                take: quantity,
+                where: {
+                    tags: {
+                        some: {
+                            tag: {
+                                title: {
+                                    contains: tag
+                                }
                             }
                         }
                     }
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    solved: true,
+                    issueUrl: true,
+                    solutionUrl: true,
+                    resolvedBy: true,
+                    resolverImage: true,
+                    description: true,
+                    createdAt: true,
+                    user: {
+                        select: {
+                            name: true,
+                            image: true,
+                        }
+                    },
+                    contributions: {
+                        select: {
+                            contributorId: true
+                        }
+                    },
+                    tags: {
+                        select: {
+                            tag: {
+                                select: {
+                                    title: true,
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
                 }
-            },
-            orderBy: {
-                createdAt: 'desc'
-            }
-        })
+            })
+        } else {
+            projects = await prisma.project.findMany({
+                skip: offset,
+                take: quantity,
+                select: {
+                    id: true,
+                    title: true,
+                    solved: true,
+                    issueUrl: true,
+                    solutionUrl: true,
+                    resolvedBy: true,
+                    resolverImage: true,
+                    description: true,
+                    createdAt: true,
+                    user: {
+                        select: {
+                            name: true,
+                            image: true,
+                        }
+                    },
+                    contributions: {
+                        select: {
+                            contributorId: true
+                        }
+                    },
+                    tags: {
+                        select: {
+                            tag: {
+                                select: {
+                                    title: true,
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: 'desc'
+                }
+            })
+        }
         return projects
     } catch (error) {
         console.error('Database error:', error)
@@ -409,7 +491,7 @@ export async function countProjects() {
 
 export async function fetchProjectById(projectId: string) {
     noStore()
-    try{
+    try {
         const project = await prisma.project.findUnique({
             where: {
                 id: projectId
@@ -427,7 +509,7 @@ export async function fetchProjectById(projectId: string) {
             }
         })
         return project
-    }catch(error) {
+    } catch (error) {
         console.error('Database error', error)
         throw new Error("Failed to fetch project data.")
     }
@@ -454,7 +536,7 @@ export async function fetchContributorsByProjectId(projectId: string) {
             }
         })
         return contributors
-    } catch(error) {
+    } catch (error) {
         console.error('Database error', error)
         throw new Error("Failed to fetch contributor data.")
     }
