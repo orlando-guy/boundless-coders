@@ -42,7 +42,7 @@ export default function Home() {
                                 iconDescription="Right arrow to redirect user to another page"
                             >Voir les défis</Button>
                         </Link>
-                        <Link href="/repos" passHref>
+                        <Link href="/contributions" passHref>
                             <Button
                                 kind='tertiary'
                                 renderIcon={ArrowRight}
