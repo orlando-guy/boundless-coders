@@ -1,12 +1,12 @@
 'use client'
 
 import React from 'react';
-import { ArrowRight, UserAvatar, Need, View } from "@carbon/icons-react";
-import { Tags } from "@carbon/pictograms-react";
+import { ArrowRight, UserAvatar, View } from "@carbon/icons-react";
 import { ClickableTile, ExpandableTile, Tag, Theme, Tile, TileAboveTheFoldContent, TileBelowTheFoldContent, Button } from "@carbon/react";
 import Image from "next/image";
 import Link from 'next/link'
 import { mdToHTML } from '@/app/lib/utils';
+import { ContributeButton } from '../projects/buttons';
 
 export interface ProjectTileProps {
     data: {
@@ -182,20 +182,12 @@ const ProjectTile = ({
                         {data.solved ? (
                             <Button
                                 className="mt-3 mb-7"
-                                href={data.solutionUrl || undefined}
+                                href={data.solutionUrl ?? undefined}
                                 renderIcon={View}
                                 iconDescription="Contribuez à ce projet"
                                 kind="tertiary"
                             >Voir la solution</Button>
-                        ) : (
-                            <Button
-                                className="mt-3 mb-7"
-                                href={data.issueUrl}
-                                renderIcon={Need}
-                                iconDescription="Contribuez à ce projet"
-                                kind="tertiary"
-                            >Contribuez</Button>
-                        )}
+                        ) : ( <ContributeButton projectId={data.id} projectUrl={data.issueUrl} /> )}
                     </div>
                 </TileAboveTheFoldContent>
                 <TileBelowTheFoldContent>

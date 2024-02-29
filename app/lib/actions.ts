@@ -43,10 +43,15 @@ export type SolutionPrevState = {
     message?: string | null;
 }
 
+export type ContributePrevState = {
+    success?: boolean;
+    message?: string | null;
+}
+
 async function getUserDataFromSession() {
     const session = await getServerAuthSession()
 
-    if (!session) redirect('/login')
+    if (!session) return null /* redirect('/login') */
 
     return {
         ...session.user,
@@ -337,7 +342,7 @@ export async function createProject(
     prevState: {},
     formData: FormData
 ) {
-    const { id: authorId } = await getUserDataFromSession()
+    const session = await getUserDataFromSession()
 
     const validatedFields = CreateProject.safeParse({
         title: formData.get('title'),
@@ -345,6 +350,12 @@ export async function createProject(
         issueUrl: formData.get('issueURL'),
         tags: formData.getAll('tag')
     })
+
+    if (!session) {
+        return {
+            message: "Connectz-vous pour continuer"
+        }
+    }
 
     if (!validatedFields.success) {
         return {
@@ -354,6 +365,8 @@ export async function createProject(
     }
 
     const { title, description, issueUrl, tags } = validatedFields.data
+
+    const { id: authorId } = session
 
     try {
         // check if the project exists already
@@ -452,7 +465,6 @@ export async function updateProject(
 }
 
 export async function deleteProject(projectId: string) {
-    console.log(projectId)
     try {
         await prisma.project.delete({
             where: {
@@ -464,6 +476,67 @@ export async function deleteProject(projectId: string) {
         console.log(error)
         return {
             message: "Érreur de la base de donnée: Le Projet n'a pas pu être supprimer."
+        }
+    }
+}
+
+export async function contributeToAProject(
+    projectId: string,
+    prevState: ContributePrevState,
+    formData: FormData
+) {
+    const session = await getUserDataFromSession()
+
+    if (!session) {
+        return {
+            success: false,
+            message: "Connectez-vous pour pouvoir contribuez à ce projet"
+        }
+    }
+
+    const { id: authorId } = session
+
+    try {
+
+        const contributeAlready = await prisma.contribution.findFirst({
+            where: {
+                contributorId: authorId,
+                projectId
+            }
+        })
+
+        if (contributeAlready) {
+            return {
+                message: "Vous contribuez déjà à ce projet",
+                success: false,
+            }
+        }
+
+        await prisma.contribution.create({
+            data: {
+                contributor: {
+                    connect: {
+                        id: authorId
+                    }
+                },
+                project: {
+                    connect: {
+                        id: projectId
+                    }
+                }
+            }
+        })
+
+        revalidatePath('/contributions')
+
+        return {
+            success: true,
+            message: "Vous êtes à présent un contributeur sur ce projet."
+        }
+    } catch(error) {
+        return {
+            success: false,
+            message: "Échec de l'enregistrement de cette contribution"
         }
     }
 }
