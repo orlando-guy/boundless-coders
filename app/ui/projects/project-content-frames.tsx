@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { Masonry } from 'masonic';
 import {
     Checkbox,
     Column,
@@ -11,10 +10,10 @@ import {
 } from '@carbon/react';
 
 import Pagination from '@/app/ui/pagination'
-import { ProjectTile } from '@/app/ui/tiles/tiles';
 import { ProjectWithTags, TagUsedByProjects } from '@/app/lib/definitions';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
+import ProjectGrid from './project-grid';
 
 const ProjectContentFrames = ({
     projects,
@@ -28,9 +27,12 @@ const ProjectContentFrames = ({
     const [isSSR, setIsSSR] = React.useState(true)
     const searchParams = useSearchParams()
     const pathname = usePathname()
+    const filterOptions = searchParams.values()
 
-    // create an url that'll trigger projects filtering
-    // e.g: https://boundless-coders.com/contribution/?&page=1&topic=frontend
+    /** 
+     * create an url that'll trigger projects filtering. 
+     * E.g: https://boundless-coders.com/contribution/?page=1&topic=frontend
+    */
     const createTopicURL = (topic: string) => {
         const params = new URLSearchParams(searchParams)
         params.set('page', '1')
@@ -50,9 +52,7 @@ const ProjectContentFrames = ({
         return (<></>)
     }
 
-    const items = projects
-
-    if (items.length === 0) {
+    if (projects.length === 0) {
         return (
             <InlineNotification
                 kind='info'
@@ -70,9 +70,9 @@ const ProjectContentFrames = ({
             <Column xlg={3} lg={4} md={8} sm={4} className="content-frames__sidebar px-0">
                 <div className="content-frames__filters pt-4">
                     <div className='filters-box'>
-                        <h4 className="heading-3 px-6 mb-2">Difficultées</h4>
+                        <h4 className="heading-3 px-6 mb-2">Status</h4>
                         <ul className='list-unstyle content-frames__filter-options'>
-                            {['Débutant', 'Moyen', 'Avancé'].map(v => (
+                            {['Non Clôturé', 'Clôturé'].map(v => (
                                 <li className="px-6 pt-2 pb-2" key={v}>
                                     <Checkbox id={`checkbox-${v}`} checked={false} labelText={v} />
                                 </li>
@@ -103,14 +103,13 @@ const ProjectContentFrames = ({
                 <div className="mobile-filters">
                     <Dropdown
                         items={[
-                            { id: 'option-0', text: 'Débutant' },
-                            { id: 'option-1', text: 'Moyen' },
-                            { id: 'option-2', text: 'Avancé' },
+                            { id: 'option-0', text: 'Non clôturé' },
+                            { id: 'option-1', text: 'Clôturé' },
                         ]}
                         itemToString={(item => item ? item.text : '')}
                         type='inline'
-                        label="Difficulté"
-                        id='difficulties-selector'
+                        label="Status"
+                        id='status-selector'
                         size='md'
                         titleText=""
                     />
@@ -130,16 +129,15 @@ const ProjectContentFrames = ({
                         label="Sujets"
                         id='topics-selector'
                         size='md'
+                        titleText=""
                     />
                 </div>
 
-                <Masonry
-                    items={items}
-                    columnGutter={15}
-                    columnWidth={290}
-                    render={ProjectTile}
-                    className='mb-1'
+                <ProjectGrid
+                    projects={projects}
+                    filterOptions={filterOptions}
                 />
+
                 <Pagination
                     totalItems={totalProjects}
                 />
