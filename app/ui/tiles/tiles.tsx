@@ -1,15 +1,44 @@
 'use client'
 
-import { ArrowRight } from "@carbon/icons-react";
-import { ClickableTile, Tag, Theme, Tile } from "@carbon/react";
+import React from 'react';
+import { ArrowRight, UserAvatar, View } from "@carbon/icons-react";
+import { ClickableTile, ExpandableTile, Tag, Theme, Tile, TileAboveTheFoldContent, TileBelowTheFoldContent, Button } from "@carbon/react";
+import Image from "next/image";
 import Link from 'next/link'
+import { mdToHTML } from '@/app/lib/utils';
+import { ContributeButton } from '../projects/buttons';
+
+export interface ProjectTileProps {
+    data: {
+        className?: string;
+        description: string;
+        id: string;
+        issueUrl: string;
+        resolvedBy: string | null;
+        resolverImage: string | null;
+        solutionUrl: string | null;
+        solved: boolean;
+        tags: {
+            tag: {
+                title: string;
+            };
+        }[];
+        theme?: "g100" | "white" | "g10" | "g90";
+        title: string;
+        user: {
+            name: string | null;
+            image: string | null;
+        };
+    };
+    index: number;
+}
 
 const ClickableWithCustomIcon = (
     { title, description, href, className, tags, theme }: Readonly<{
         title: string;
         href: string;
         description?: string;
-        tags?: {
+        tags: {
             tag: {
                 title: string;
             }
@@ -75,7 +104,109 @@ const DefaultTile = ({
     )
 }
 
+
+const ProjectTile = ({
+    data,
+    index
+}: Readonly<ProjectTileProps>) => {
+    const [parsedDescription, setParsedDescription] = React.useState<string | null>(null)
+    const theme = data?.theme ?? 'white'
+    const theAuthorIsTheResolver = data.resolvedBy === data.user?.name
+
+    React.useEffect(() => {
+        mdToHTML(data.description)
+            .then(parsedContent => setParsedDescription(parsedContent))
+    }, [data.description])
+
+    return (
+        <Theme theme={theme}>
+            <ExpandableTile className="project-card">
+                <TileAboveTheFoldContent>
+                    <div className="flex flex-col gap-4 project-card__above-container">
+                        <ul className="list-unstyle flex justify-between above-container__tiers">
+                            <li>
+                                <div className="flex flex-col gap-2">
+                                    <small>Aide demandée: </small>
+                                    <div className="flex items-center gap-2">
+                                        <div className="user-profile-image">
+                                            {data.user?.image ? (
+                                                <Image
+                                                    src={data.user.image}
+                                                    width={56}
+                                                    height={56}
+                                                    alt='user profile picture'
+                                                />
+                                            ) : (
+                                                <UserAvatar size={25} />
+                                            )}
+                                        </div>
+                                        <small>{data.user?.name}</small>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            {(data.solved && !theAuthorIsTheResolver) 
+                                && (<li>
+                                <div className="flex flex-col gap-2">
+                                    <small>Aidé par: </small>
+                                    <div className="flex items-center gap-2">
+                                        <div className="user-profile-image">
+                                            {data.resolverImage ? (
+                                                <Image
+                                                    src={data.resolverImage}
+                                                    width={56}
+                                                    height={56}
+                                                    alt='user profile picture'
+                                                />
+                                            ) : (
+                                                <UserAvatar size={25} />
+                                            )}
+                                        </div>
+                                        <small>{data?.resolvedBy}</small>
+                                    </div>
+                                </div>
+                            </li>)}
+                        </ul>
+
+                        <h4>{data.title}</h4>
+
+                        <div className="flex gap-2">
+                            {data.tags.map(item => (
+                                <Tag
+                                    key={ item.tag.title.replace(' ', '-') }
+                                    type="gray"
+                                >{item.tag.title}</Tag>
+                            ))}
+                        </div>
+
+                        {data.solved ? (
+                            <Button
+                                className="mt-3 mb-7"
+                                href={data.solutionUrl ?? undefined}
+                                renderIcon={View}
+                                iconDescription="Contribuez à ce projet"
+                                kind="tertiary"
+                            >Voir la solution</Button>
+                        ) : ( <ContributeButton projectId={data.id} projectUrl={data.issueUrl} /> )}
+                    </div>
+                </TileAboveTheFoldContent>
+                <TileBelowTheFoldContent>
+                    {parsedDescription && (
+                        <div className='project-detail'>
+                            <article
+                                className="markdown-body w-full py-3"
+                                dangerouslySetInnerHTML={{ __html: parsedDescription }}
+                            />
+                        </div>
+                    )}
+                </TileBelowTheFoldContent>
+            </ExpandableTile>
+        </Theme>
+    )
+}
+
 export {
     ClickableWithCustomIcon,
-    DefaultTile
+    DefaultTile,
+    ProjectTile
 }
