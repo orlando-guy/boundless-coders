@@ -96,14 +96,14 @@ const SolutionFormSchema = z.object({
 })
 const CloseProjectFormSchema = z.object({
     contributor: z.string().min(5, {
-        message: "Veillez sélectionner un contributeur"
+        message: "Veillez sélectionner un contributeur."
     }),
     solutionUrl: z.string().min(25, {
         message: "Désolé, l'URL que vous avez saisie est trop courte."
     }).max(255, {
         message: "Cette URL est trop longue. Veuillez saisir quelque chose de court."
-    }).url('Veuillez saisir une URL valide.').includes('git', {
-        message: "L'URL que vous avez saisie ne semble correspondre à aucun dépot GitHub ou GitLab"
+    }).url('Veuillez saisir une URL valide.').includes('/pull/', {
+        message: "L'URL que vous avez saisie ne semble correspondre à aucun pull request."
     })
 })
 
@@ -554,7 +554,7 @@ export async function closeProject(
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: "Champs manquents. Échec de la création du projet",
+            message: "Échec de la création du projet.",
             success: false
         }
     }
