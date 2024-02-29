@@ -357,14 +357,14 @@ export async function fetchPaginatedProjectsByAuthorId(authorId: string, current
     }
 }
 
-export async function filterProjectByTagAndPage(currentPage: number, tag: string, quantity?: number) {
+export async function filterProjectByTagAndPage(currentPage: number, tagTitle: string, quantity?: number) {
     noStore()
     quantity ||= 10
     const offset = quantity * (currentPage - 1)
     let projects: ProjectWithTags[]
 
     try {
-        if (tag !== '') {
+        if (tagTitle !== '') {
             projects = await prisma.project.findMany({
                 skip: offset,
                 take: quantity,
@@ -372,9 +372,7 @@ export async function filterProjectByTagAndPage(currentPage: number, tag: string
                     tags: {
                         some: {
                             tag: {
-                                title: {
-                                    contains: tag
-                                }
+                                title: tagTitle
                             }
                         }
                     }
@@ -478,11 +476,28 @@ export async function fetchProjectsTags() {
     }
 }
 
-export async function countProjects() {
+/**
+ * Counts and returns the number of projects stored. It can also allows count projects following a specific tag
+ */
+export async function countProjects(tagTitle?: string) {
     noStore()
     try {
-        const totalItems = await prisma.project.count({})
-        return totalItems
+
+        if (tagTitle) {
+            return await prisma.project.count({
+                where: {
+                    tags: {
+                        some: {
+                            tag: {
+                                title: tagTitle
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        return await prisma.project.count({})
     } catch (error) {
         console.error('Database error', error)
         throw new Error('Failed to count projects data.')
