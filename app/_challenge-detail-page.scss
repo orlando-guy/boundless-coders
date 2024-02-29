@@ -49,6 +49,11 @@
 
         ol {
             list-style: decimal;
+
+            li {
+                padding-top: .5rem;
+                padding-bottom: .5rem;
+            }
         }
 
         ul {

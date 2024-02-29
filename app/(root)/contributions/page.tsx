@@ -19,7 +19,7 @@ export default async function ContributionsPage({
     ])
     
     return (
-        <section className='py-6'>
+        <section className={`py-6 ${projects.length === 0 ? 'flex flex-center' : ''}`}>
             <ProjectContentFrames
                 projects={projects}
                 tags={tags}
