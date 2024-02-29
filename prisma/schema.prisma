@@ -86,7 +86,7 @@ model Challenge {
   archived           Boolean            @default(false)
   published          Boolean            @default(true)
   level              Level              @default(ENTRY)
-  challengeManager   User               @relation(fields: [challengeManagerId], references: [id])
+  challengeManager   User               @relation(fields: [challengeManagerId], references: [id], onDelete: Cascade)
   challengeManagerId String             @db.Uuid
   createdAt          DateTime           @default(now())
   updatedAt          DateTime           @default(now())
@@ -95,9 +95,9 @@ model Challenge {
 }
 
 model TagsOnChallenges {
-  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
   challengeId String    @db.Uuid
-  tag         Tag       @relation(fields: [tagId], references: [id])
+  tag         Tag       @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId       String    @db.Uuid
   assignedAt  DateTime  @default(now())
 
@@ -107,9 +107,9 @@ model TagsOnChallenges {
 model Solution {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   repoUrl     String    @unique @db.VarChar(255)
-  challenge   Challenge @relation(fields: [challengeId], references: [id])
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
   challengeId String    @db.Uuid
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String    @db.Uuid
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @default(now())
@@ -118,13 +118,15 @@ model Solution {
 model Project {
   id            String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title         String           @db.VarChar(255)
-  repoUrl       String           @db.VarChar(255)
+  issueUrl      String           @unique @db.VarChar(255)
   description   String
   solved        Boolean          @default(false)
   archived      Boolean          @default(false)
   publiched     Boolean          @default(false)
   resolvedBy    String?
-  user          User             @relation(fields: [userId], references: [id])
+  resolverImage String?
+  solutionUrl   String?          @unique @db.VarChar(255)
+  user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        String           @db.Uuid
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @default(now())
@@ -133,9 +135,9 @@ model Project {
 }
 
 model TagsOnProjects {
-  project    Project  @relation(fields: [projectId], references: [id])
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId  String   @db.Uuid
-  tag        Tag      @relation(fields: [tagId], references: [id])
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
   tagId      String   @db.Uuid
   assignedAt DateTime @default(now())
 
@@ -144,9 +146,9 @@ model TagsOnProjects {
 
 model Contribution {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  project       Project  @relation(fields: [projectId], references: [id])
+  project       Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
   projectId     String   @db.Uuid
-  contributor   User     @relation(fields: [contributorId], references: [id])
+  contributor   User     @relation(fields: [contributorId], references: [id], onDelete: Cascade)
   contributorId String   @db.Uuid
   createdAt     DateTime @default(now())
   updatedAt     DateTime @default(now())

@@ -1,13 +1,14 @@
 import { getServerAuthSession } from "@/app/api/auth/[...nextauth]/route"
-import { fetchSolutionsByAuthorId } from "@/app/lib/data"
-import { MySolutionTable } from "@/app/ui/Table"
+import { fetchAchievedProjectsByContributorId, fetchSolutionsByAuthorId } from "@/app/lib/data"
+import { MySolutionTable, UserContributionsTable } from "@/app/ui/Table"
 
 export default async function MyContributionPage() {
     const session = await getServerAuthSession()
-    let solutions
+    let solutions, contributions
 
     if (session) {
         solutions = await fetchSolutionsByAuthorId(session.user.id)
+        contributions = await fetchAchievedProjectsByContributorId(session.user.id)
     }
 
     return (
@@ -16,6 +17,11 @@ export default async function MyContributionPage() {
             <MySolutionTable
                 solutions={solutions}
                 containerClassName="mt-4"
+            />
+
+            <UserContributionsTable
+                contributions={contributions}
+                containerClassName="mt-5"
             />
         </div>
     )
