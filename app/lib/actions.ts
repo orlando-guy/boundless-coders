@@ -17,12 +17,45 @@ export type PrevState = {
     message?: string | null
 }
 
+export type ProjectPrevState = {
+    errors?: {
+        title?: string[];
+        description?: string[];
+        tags?: string[];
+    };
+    message?: string | null
+}
+
+export type CloseProjectPrevState = {
+    errors?: {
+        contributor?: string[],
+        solutionUrl?: string[]
+    },
+    success?: boolean | null;
+    message?: string | null
+}
+
 export type SolutionPrevState = {
     errors?: {
         repoUrl?: string[];
     };
     success?: boolean | null;
     message?: string | null;
+}
+
+export type ContributePrevState = {
+    success?: boolean;
+    message?: string | null;
+}
+
+async function getUserDataFromSession() {
+    const session = await getServerAuthSession()
+
+    if (!session) return null /* redirect('/login') */
+
+    return {
+        ...session.user,
+    }
 }
 
 const ChallengeFormSchema = z.object({
@@ -43,6 +76,13 @@ const ChallengeFormSchema = z.object({
         message: 'Veuillez sélectionner le(s) tag(s) correspondant à ce défi'
     }).max(3, {
         message: "Vous ne pouvez sélectionner qu'un maximum de 3 tags"
+    }),
+    issueUrl: z.string().min(25, {
+        message: "Désolé, l'URL que vous avez saisie est trop courte."
+    }).max(255, {
+        message: "Cette URL est trop longue. Veuillez saisir quelque chose de court."
+    }).url('Veuillez saisir une URL valide.').includes('git', {
+        message: "L'URL que vous avez saisie ne semble correspondre à aucun dépot GitHub ou GitLab"
     })
 })
 const SolutionFormSchema = z.object({
@@ -54,9 +94,23 @@ const SolutionFormSchema = z.object({
         message: "L'URL que vous avez saisie ne semble correspondre à aucun dépot GitHub ou GitLab"
     })
 })
+const CloseProjectFormSchema = z.object({
+    contributor: z.string().min(5, {
+        message: "Veillez sélectionner un contributeur."
+    }),
+    solutionUrl: z.string().min(25, {
+        message: "Désolé, l'URL que vous avez saisie est trop courte."
+    }).max(255, {
+        message: "Cette URL est trop longue. Veuillez saisir quelque chose de court."
+    }).url('Veuillez saisir une URL valide.').includes('/pull/', {
+        message: "L'URL que vous avez saisie ne semble correspondre à aucun pull request."
+    })
+})
 
-const CreateChallenge = ChallengeFormSchema.omit({ id: true })
-const UpdateChallenge = ChallengeFormSchema.omit({ id: true, tags: true })
+const CreateChallenge = ChallengeFormSchema.omit({ id: true, issueUrl: true })
+const UpdateChallenge = ChallengeFormSchema.omit({ id: true, tags: true, issueUrl: true })
+const CreateProject = ChallengeFormSchema.omit({ id: true, content: true, level: true })
+const UpdateProject = ChallengeFormSchema.omit({ id: true, content: true, level: true, tags: true })
 
 export async function createChallenge(
     prevState: PrevState,
@@ -275,9 +329,279 @@ export async function deleteSolution(solutionId: string) {
             }
         })
         revalidatePath('/dashboard/in/contributions')
+    } catch (error) {
+        return {
+            message: "Érreur de la base de donnée: La Solution n'a pas pu être supprimer."
+        }
+    }
+}
+
+/* Project actions */
+
+export async function createProject(
+    prevState: {},
+    formData: FormData
+) {
+    const session = await getUserDataFromSession()
+
+    const validatedFields = CreateProject.safeParse({
+        title: formData.get('title'),
+        description: formData.get('description'),
+        issueUrl: formData.get('issueURL'),
+        tags: formData.getAll('tag')
+    })
+
+    if (!session) {
+        return {
+            message: "Connectz-vous pour continuer"
+        }
+    }
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Champs manquents. Échec de la création du projet'
+        }
+    }
+
+    const { title, description, issueUrl, tags } = validatedFields.data
+
+    const { id: authorId } = session
+
+    try {
+        // check if the project exists already
+        const itExistsAlready = await prisma.project.findFirst({
+            where: {
+                issueUrl,
+            },
+            select: {
+                id: true
+            }
+        })
+
+        if (itExistsAlready) {
+            return {
+                message: "Ce projet existe déjà"
+            }
+        }
+
+        await prisma.project.create({
+            data: {
+                title,
+                description,
+                issueUrl,
+                tags: {
+                    createMany: {
+                        data: Array.from(tags, (tag) => ({
+                            tagId: tag
+                        }))
+                    }
+                },
+                user: {
+                    connect: {
+                        id: authorId
+                    }
+                },
+                contributions: {
+                    create: {
+                        contributorId: authorId
+                    }
+                }
+            }
+        })
+
+    } catch (error) {
+        console.log(error)
+        return {
+            message: 'Échec lors de la création de la solution.'
+        }
+    }
+
+    revalidatePath('/dashboard/in/projects')
+    redirect('/dashboard/in/projects')
+}
+
+export async function updateProject(
+    projectId: string,
+    prevState: ProjectPrevState,
+    formData: FormData
+) {
+    const validatedFields = UpdateProject.safeParse({
+        title: formData.get('title'),
+        description: formData.get('description'),
+        issueUrl: formData.get('issueURL'),
+    })
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Champs manquents. Échec de la création du projet"
+        }
+    }
+
+    const { title, description, issueUrl } = validatedFields.data
+
+    try {
+        await prisma.project.update({
+            where: {
+                id: projectId
+            },
+            data: {
+                title,
+                description,
+                issueUrl,
+                updatedAt: (new Date()).toISOString()
+            }
+        })
+    } catch (error) {
+        console.log(error)
+        return {
+            message: "Érreur de la base de donnée: Le projet n'a pas pu être modifier."
+        }
+    }
+
+    revalidatePath('/dashboard/in/projects')
+    redirect('/dashboard/in/projects')
+}
+
+export async function deleteProject(projectId: string) {
+    try {
+        await prisma.project.delete({
+            where: {
+                id: projectId
+            }
+        })
+        revalidatePath('/dashboard/in/projects')
+    } catch (error) {
+        console.log(error)
+        return {
+            message: "Érreur de la base de donnée: Le Projet n'a pas pu être supprimer."
+        }
+    }
+}
+
+export async function contributeToAProject(
+    projectId: string,
+    prevState: ContributePrevState,
+    formData: FormData
+) {
+    const session = await getUserDataFromSession()
+
+    if (!session) {
+        return {
+            success: false,
+            message: "Connectez-vous pour pouvoir contribuez à ce projet"
+        }
+    }
+
+    const { id: authorId } = session
+
+    try {
+
+        const contributeAlready = await prisma.contribution.findFirst({
+            where: {
+                contributorId: authorId,
+                projectId
+            }
+        })
+
+        if (contributeAlready) {
+            return {
+                message: "Vous contribuez déjà à ce projet",
+                success: false,
+            }
+        }
+
+        await prisma.contribution.create({
+            data: {
+                contributor: {
+                    connect: {
+                        id: authorId
+                    }
+                },
+                project: {
+                    connect: {
+                        id: projectId
+                    }
+                }
+            }
+        })
+
+        revalidatePath('/contributions')
+
+        return {
+            success: true,
+            message: "Vous êtes à présent un contributeur sur ce projet."
+        }
     } catch(error) {
         return {
-            message: "Érreur de la bose de donnée: La Solution n'a pas pu être supprimer."
+            success: false,
+            message: "Échec de l'enregistrement de cette contribution"
+        }
+    }
+}
+
+export async function closeProject(
+    projectId: string,
+    prevState: CloseProjectPrevState,
+    formData: FormData
+) {
+    const validatedFields = CloseProjectFormSchema.safeParse({
+        contributor: formData.get('contributor'),
+        solutionUrl: formData.get('solutionURL')
+    })
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: "Échec de la création du projet.",
+            success: false
+        }
+    }
+
+    const { contributor, solutionUrl } = validatedFields.data
+
+    try {
+        const contributorData = await prisma.user.findUnique({
+            where: {
+                name: contributor
+            },
+            select: {
+                image: true
+            }
+        })
+
+        if (!contributorData) {
+            return {
+                message: "Échec de la clôture du projet. Une érreur inattendue est survenue",
+                success: false
+            }
+        }
+
+        await prisma.project.update({
+            where: {
+                id: projectId
+            },
+            data: {
+                resolvedBy: contributor,
+                resolverImage: contributorData?.image,
+                solutionUrl,
+                solved: true,
+                updatedAt: (new Date()).toISOString()
+            }
+        })
+
+        revalidatePath('/dashboard/in/projects')
+
+        return {
+            message: "Votre problème a été clôturer avec succè.",
+            success: true
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            message: 'Échec lors de la clôture du projet.',
+            success: false
         }
     }
 }

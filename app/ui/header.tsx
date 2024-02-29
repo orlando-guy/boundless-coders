@@ -34,16 +34,16 @@ const HeaderNavbar = ({
                         aria-expanded={isSideNavExpanded}
                     />
                     <Link href='/' passHref legacyBehavior>
-                        <HeaderName href='/' prefix=' '>
+                        <HeaderName prefix=' '>
                             BOUNDLESS CODERS
                         </HeaderName>
                     </Link>
                     <HeaderNavigation aria-label='Carbon header'>
-                        <Link href="/repos" passHref legacyBehavior>
-                            <HeaderMenuItem href="/repos">Les contributions</HeaderMenuItem>
+                        <Link href="/contributions" passHref legacyBehavior>
+                            <HeaderMenuItem>Les contributions</HeaderMenuItem>
                         </Link>
                         <Link href="/challenges" passHref legacyBehavior>
-                            <HeaderMenuItem href="/challenges">Les défis de codage</HeaderMenuItem>
+                            <HeaderMenuItem>Les défis de codage</HeaderMenuItem>
                         </Link>
                     </HeaderNavigation>
                     <SideNav
@@ -65,6 +65,16 @@ const HeaderNavbar = ({
                                             <Link href="/dashboard/in" passHref legacyBehavior>
                                                 <HeaderMenuItem>
                                                     Tableau de bord
+                                                </HeaderMenuItem>
+                                            </Link>
+                                            <Link href="/dashboard/in/contributions" passHref legacyBehavior>
+                                                <HeaderMenuItem>
+                                                    Mes contributions
+                                                </HeaderMenuItem>
+                                            </Link>
+                                            <Link href="/dashboard/in/projects" passHref legacyBehavior>
+                                                <HeaderMenuItem>
+                                                    Mes projets
                                                 </HeaderMenuItem>
                                             </Link>
                                             <Link href="/dashboard/in/my-challenges" passHref legacyBehavior>

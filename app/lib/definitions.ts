@@ -81,3 +81,60 @@ export type Solution = {
         slug: string;
     };
 }
+
+/* Types related to Projects Or Contributions */
+
+export interface Project {
+    id: string;
+    title: string;
+    issueUrl: string;
+    description: string;
+    solved: boolean;
+    resolvedBy: string | null;
+    resolverImage: string | null;
+    solutionUrl: string | null;
+    createdAt: Date;
+}
+
+export interface ProjectWithContributors extends Project {
+    contributions: {
+        contributor: {
+            id: string;
+            name: string | null;
+            image: string | null;
+        };
+    }[];
+}
+
+export interface ProjectWithTags extends Project {
+    user: {
+        name: string | null;
+        image: string | null;
+    };
+    tags: {
+        tag: {
+            title: string;
+        }
+    }[];
+}
+
+export type TagUsedByProjects = ({
+    _count: {
+        projects: number;
+    };
+} & {
+    id: string;
+    title: string;
+    adminId: string;
+    archived: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+})
+
+export type Contributor = {
+    contributor: {
+        id: string;
+        name: string | null;
+        image: string | null;
+    };
+}

@@ -1,6 +1,7 @@
 @use '@carbon/react/scss/breakpoint' as *;
 
-.challenge-detail {
+.challenge-detail,
+.project-detail {
     .markdown-body {
         display: block;
         word-wrap: break-word;
@@ -31,20 +32,28 @@
 
         p:has(img) {
             text-align: center;
+
             img {
                 object-fit: contain;
+
                 @include breakpoint-down(md) {
                     width: 100%;
                 }
             }
         }
 
-        ol, ul {
+        ol,
+        ul {
             padding-left: 2em;
         }
 
         ol {
             list-style: decimal;
+
+            li {
+                padding-top: .5rem;
+                padding-bottom: .5rem;
+            }
         }
 
         ul {
@@ -56,15 +65,16 @@
             }
         }
 
-            code, tt {
-                padding: .2em .4em;
-                margin: 0;
-                font-size: 85%;
-                white-space: break-spaces;
-                color: inherit;
-                background-color: #dbe1e7;
-                border-radius: 6px;
-            }
+        code,
+        tt {
+            padding: .2em .4em;
+            margin: 0;
+            font-size: 85%;
+            white-space: break-spaces;
+            color: inherit;
+            background-color: #dbe1e7;
+            border-radius: 6px;
+        }
 
         pre {
             padding: 16px;
@@ -75,7 +85,7 @@
             background-color: #161b22;
             margin-bottom: 16px;
 
-            & > code {
+            &>code {
                 display: inline;
                 max-width: auto;
                 padding: 0;

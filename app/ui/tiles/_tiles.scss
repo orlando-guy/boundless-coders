@@ -19,3 +19,28 @@
         }
     }
 }
+
+.project-card {
+    .user-profile-image {
+        height: 2.188rem;
+        width: 2.188rem;
+        border-radius: 50%;
+        
+        &:has(svg) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f4f4f4;
+        }
+    
+        &:has(img) {
+            border: 2px solid #fff;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}
