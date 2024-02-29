@@ -112,6 +112,8 @@ const UpdateChallenge = ChallengeFormSchema.omit({ id: true, tags: true, issueUr
 const CreateProject = ChallengeFormSchema.omit({ id: true, content: true, level: true })
 const UpdateProject = ChallengeFormSchema.omit({ id: true, content: true, level: true, tags: true })
 
+/* Challenge actions */
+
 export async function createChallenge(
     prevState: PrevState,
     formData: FormData
@@ -251,6 +253,8 @@ export async function archiveChallenge(challengeId: string) {
         }
     }
 }
+
+/* Solution actions */
 
 export async function createChallengeSolution(
     challengeId: string,

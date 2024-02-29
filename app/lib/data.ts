@@ -82,11 +82,6 @@ export async function filteredChallenges(currentPage: number, query: string) {
                                     title: true,
                                 }
                             }
-                        },
-                        where: {
-                            tag: {
-                                title: query
-                            }
                         }
                     }
                 },
