@@ -39,7 +39,13 @@ const Footer = () => {
                                         target="_blank"
                                     >GitHub</CarbonLink>
                                 </li>
-                                <li className="text-white-20 mt-1">LinkedIn</li>
+                                <li className="text-white-20 mt-1">
+                                    <CarbonLink
+                                        href="https://www.linkedin.com/company/boundless-coders"
+                                        className="text-white-20"
+                                        target="_blank"
+                                    >LinkedIn</CarbonLink>
+                                </li>
                             </ul>
                         </div>
                     </Column>
