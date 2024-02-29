@@ -477,7 +477,7 @@ export async function fetchProjectsTags() {
 }
 
 /**
- * Counts and returns the number of projects stored. It can also allows count projects following a specific tag
+ * Counts and returns the number of projects stored. It can also count projects following a specific tag
  */
 export async function countProjects(tagTitle?: string) {
     noStore()
@@ -554,5 +554,48 @@ export async function fetchContributorsByProjectId(projectId: string) {
     } catch (error) {
         console.error('Database error', error)
         throw new Error("Failed to fetch contributor data.")
+    }
+}
+
+export async function fetchAchievedProjectsByContributorId(contributorId: string) {
+    noStore()
+
+    try {
+        const contributor = await prisma.user.findUnique({
+            where: {
+                id: contributorId
+            },
+            select: {
+                name: true
+            }
+        })
+
+        if (contributor && contributor.name) {
+            return await prisma.project.findMany({
+                where: {
+                    contributions: {
+                        every: {
+                            contributor: {
+                                id: contributorId
+                            }
+                        }
+                    },
+                    solved: {
+                        equals: true
+                    },
+                    resolvedBy: contributor.name
+                },
+                select: {
+                    id: true,
+                    title: true,
+                    issueUrl: true,
+                    solutionUrl: true
+                }
+            })
+        }
+        return null
+    } catch(error) {
+        console.log(error)
+        throw new Error("Failed to fetch User Contribution data.")
     }
 }

@@ -148,6 +148,54 @@ const MySolutionTable = ({
     )
 }
 
+const UserContributionsTable = ({
+    contributions,
+    containerClassName
+}: Readonly<{
+    contributions?: {
+        id: string;
+        title: string;
+        issueUrl: string;
+        solutionUrl: string | null;
+    }[] | null;
+    containerClassName?: string;
+}>) => {
+    return (
+        <TableContainer
+            title="Mes contributions"
+            description="Ici vous trouverez l'ensemble des problèmes que vous avez résolu."
+            className={`${containerClassName ?? ''} mt-3`}
+        >
+            <Table aria-label="contributions table">
+                <TableHead>
+                    <TableRow>
+                        <TableHeader>Intitulé du problème</TableHeader>
+                        <TableHeader>Lien du problème</TableHeader>
+                        <TableHeader>Lien de votre pull request</TableHeader>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {contributions && contributions.map(contribution => (
+                        <TableRow key={contribution.id}>
+                            <TableCell>{contribution.title}</TableCell>
+                            <TableCell>
+                                <CarbonLink href={contribution.issueUrl} target="_blank">
+                                    {contribution.issueUrl}
+                                </CarbonLink>
+                            </TableCell>
+                            <TableCell>
+                                {contribution.solutionUrl && <CarbonLink href={contribution.solutionUrl} target="_blank">
+                                    {contribution.solutionUrl}
+                                </CarbonLink>}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer >
+    )
+}
+
 const MyProjectsTable = ({
     containerClassName,
     projects,
@@ -242,5 +290,6 @@ const MyProjectsTable = ({
 export {
     ChallengeTable,
     MyProjectsTable,
-    MySolutionTable
+    MySolutionTable,
+    UserContributionsTable
 }
