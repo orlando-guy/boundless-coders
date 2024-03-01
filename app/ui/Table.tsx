@@ -115,7 +115,7 @@ const MySolutionTable = ({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {solutions && solutions.map(solution => (
+                    {solutions?.map(solution => (
                         <TableRow key={solution.id}>
                             <TableCell>
                                 <CarbonLink href={solution.repoUrl} target="_blank">
@@ -175,7 +175,7 @@ const UserContributionsTable = ({
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {contributions && contributions.map(contribution => (
+                    {contributions?.map(contribution => (
                         <TableRow key={contribution.id}>
                             <TableCell>{contribution.title}</TableCell>
                             <TableCell>
