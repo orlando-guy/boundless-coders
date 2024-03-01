@@ -51,8 +51,4 @@ const ProjectGrid = ({
     )
 }
 
-
-
-
-
 export default ProjectGrid

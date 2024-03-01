@@ -11,7 +11,7 @@ import {
     HeaderSideNavItems,
     Button,
 } from '@carbon/react'
-import { UserAvatar, LogoGithub} from '@carbon/icons-react'
+import { UserAvatar, LogoGithub } from '@carbon/icons-react'
 import Link from 'next/link'
 import { Session } from 'next-auth'
 import { LoggedInUserPopover } from './popover/popover'
@@ -21,7 +21,7 @@ const HeaderNavbar = ({
 }: Readonly<{
     session?: Session | null
 }>) => {
-
+    const challengeManagers = ['ADMIN', 'CHALLENGE_MANAGER']
     return (
         <HeaderContainer
             render={({ isSideNavExpanded, onClickSideNavExpand }) => (
@@ -77,11 +77,11 @@ const HeaderNavbar = ({
                                                     Mes projets
                                                 </HeaderMenuItem>
                                             </Link>
-                                            <Link href="/dashboard/in/my-challenges" passHref legacyBehavior>
+                                            {challengeManagers.includes(session.user.role) && <Link href="/dashboard/in/my-challenges" passHref legacyBehavior>
                                                 <HeaderMenuItem>
                                                     Mes challenges
                                                 </HeaderMenuItem>
-                                            </Link>
+                                            </Link>}
                                         </>
                                     )}
                                 </HeaderSideNavItems>

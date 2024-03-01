@@ -565,7 +565,7 @@ export async function fetchAchievedProjectsByContributorId(contributorId: string
             }
         })
 
-        if (contributor && contributor.name) {
+        if (contributor?.name) {
             return await prisma.project.findMany({
                 where: {
                     contributions: {
