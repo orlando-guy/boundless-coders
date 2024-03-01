@@ -1,5 +1,4 @@
-import { LogoGithub, LogoLinkedin } from "@carbon/icons-react";
-import { Select, SelectItem, Grid, Column, Link as CarbonLink, Button } from "@carbon/react";
+import { Select, SelectItem, Grid, Column, Link as CarbonLink } from "@carbon/react";
 import Link from "next/link";
 
 const Footer = () => {
