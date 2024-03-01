@@ -20,7 +20,7 @@ const ModalStateManager = ({
                 onClick={setOpenOrClose}
                 renderIcon={Upload}
             >
-                Poster votre solution
+                Partager votre solution
             </Button>
 
             <CreateSolutionModal
